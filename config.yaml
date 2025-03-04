@@ -1,0 +1,8 @@
+# Default configuration for micaflow pipeline
+subject: ""  # Subject ID
+session: ""  # Session ID
+out_dir: ""  # Output directory
+threads: 1   # Number of threads to use
+data_directory: ""  # BIDS-compatible data directory
+run_dwi: true  # Toggle for running DWI processing
+cleanup: true  # Toggle for cleaning up work directory 
