@@ -41,16 +41,19 @@ def get_final_output():
 
 rule all:
     input:
-        get_final_output()
+        get_final_output(),
+        expand(f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{SUBJECT}_{SESSION}_space-T1w_{{modality}}.nii.gz", modality=["T1w", "FLAIR"])
 
 rule skull_strip:
     input:
         image = lambda wildcards: f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/anat/{SUBJECT}_{SESSION}_{'run-1_' if wildcards.modality == 'T1w' else ''}{wildcards.modality}.nii.gz"
     output:
-        brain = f"{OUT_DIR}/{{modality}}_hdbet.nii.gz",
-        mask = f"{OUT_DIR}/{{modality}}_hdbet_bet.nii.gz"
+        brain = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{{modality}}_hdbet.nii.gz",
+        mask = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{{modality}}_hdbet_bet.nii.gz"
     conda:
         "envs/micaflow.yml"
+    resources:
+        skull_strip_jobs=1  # Allows only one job of this type to run at a time
     shell:
         "python3 scripts/hdbet.py --input {input.image} --output {output.brain}"
 
@@ -143,7 +146,7 @@ rule apply_warp_flair_to_t1w:
         affine = rules.registration_t1w.output.fwd_affine,
         reference = rules.bias_field_correction.output.corrected
     output:
-        warped = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{SUBJECT}_{SESSION}_space-T1w_FLAIR.nii.gz"
+        warped = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{SUBJECT}_{SESSION}_space-T1w_{{modality}}.nii.gz"
     conda:
         "envs/micaflow.yml"
     shell:
@@ -212,9 +215,9 @@ rule calculate_metrics:
 if RUN_DWI:
     rule dwi_denoise:
         input:
-            moving = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_b700.nii.gz",
-            bval = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_b700.bval",
-            bvec = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_b700.bvec"
+            moving = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_acq-b700-41_dir-AP_dwi.nii.gz",
+            bval = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_acq-b700-41_dir-AP_dwi.bval",
+            bvec = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_acq-b700-41_dir-AP_dwi.bvec"
         output:
             denoised = f"{OUT_DIR}/{SUBJECT}/{SESSION}/dwi/denoised_moving.nii.gz"
         conda:
@@ -224,14 +227,15 @@ if RUN_DWI:
             python3 scripts/dwi_denoise.py \
                 --moving {input.moving} \
                 --bval {input.bval} \
-                --bvec {input.bvec}
+                --bvec {input.bvec} \
+                --output {output.denoised}
             """
 
     rule dwi_motion_correction:
         input:
             denoised = rules.dwi_denoise.output.denoised,
-            bval = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_b700.bval",
-            bvec = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_b700.bvec"
+            bval = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_acq-b700-41_dir-AP_dwi.bval",
+            bvec = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_acq-b700-41_dir-AP_dwi.bvec"
         output:
             corrected = f"{OUT_DIR}/{SUBJECT}/{SESSION}/dwi/moving_motion_corrected.nii.gz"
         conda:
@@ -241,15 +245,16 @@ if RUN_DWI:
             python3 scripts/dwi_motioncorrection.py \
                 --denoised {input.denoised} \
                 --bval {input.bval} \
-                --bvec {input.bvec}
+                --bvec {input.bvec} \
+                --output {output.corrected}
             """
 
     rule dwi_topup:
         input:
             moving = rules.dwi_motion_correction.output.corrected,
-            b0 = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_PA.nii.gz",
-            b0_bval = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_PA.bval",
-            b0_bvec = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_PA.bvec"
+            b0 = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_dir-PA_dwi.nii.gz",
+            b0_bval = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_dir-PA_dwi.bval",
+            b0_bvec = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_dir-PA_dwi.bvec"
         output:
             warp = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/topup-warp-EstFieldMap.nii.gz",
             corrected = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/corrected_image.nii.gz"
@@ -260,14 +265,15 @@ if RUN_DWI:
             python3 scripts/pyhysco.py \
                 --data_image {input.moving} \
                 --reverse_image {input.b0} \
-                --output_name {output.corrected}
+                --output_name {output.corrected} \
+                --output_warp {output.warp} 
             """
 
     rule dwi_apply_topup:
         input:
             motion_corr = rules.dwi_motion_correction.output.corrected,
             warp = rules.dwi_topup.output.warp,
-            affine = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_b700.nii.gz"
+            affine = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_acq-b700-41_dir-AP_dwi.nii.gz"
         output:
             corrected = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/topup_corrected.nii.gz"
         conda:
@@ -277,13 +283,15 @@ if RUN_DWI:
             python3 scripts/dwi_applytopup.py \
                 --motion_corr {input.motion_corr} \
                 --warp {input.warp} \
-                --affine {input.affine}
+                --affine {input.affine} \
+                --output {output.corrected}
             """
 
     rule dwi_skull_strip:
         input:
             image = rules.dwi_topup.output.corrected
         output:
+            image = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/DWI_hdbet.nii.gz",
             mask = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/DWI_hdbet_bet.nii.gz"
         conda:
             "envs/micaflow.yml"
@@ -291,7 +299,7 @@ if RUN_DWI:
             """
             python3 scripts/hdbet.py \
                 --input {input.image} \
-                --output DWI_hdbet.nii.gz
+                --output {output.image}
             """
 
     rule dwi_bias_correction:
@@ -306,7 +314,8 @@ if RUN_DWI:
             """
             python3 scripts/dwi_biascorrection.py \
                 --image {input.image} \
-                --mask {input.mask}
+                --mask {input.mask} \
+                --output {output.corrected}
             """
 
     rule synthseg_dwi:
@@ -334,7 +343,9 @@ if RUN_DWI:
             fixed = rules.synthseg_t1w.output.seg
         output:
             fwd_field = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-DWI_to-T1w_fwdfield.nii.gz",
-            fwd_affine = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-DWI_to-T1w_fwdaffine.mat"
+            fwd_affine = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-DWI_to-T1w_fwdaffine.mat",
+            rev_field = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-DWI_to-T1w_revfield.nii.gz",
+            rev_affine = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-DWI_to-T1w_revaffine.mat"
         conda:
             "envs/micaflow.yml"
         shell:
@@ -343,15 +354,17 @@ if RUN_DWI:
                 --fixed {input.fixed} \
                 --moving {input.moving} \
                 --affine {output.fwd_affine} \
-                --warpfield {output.fwd_field}
+                --warpfield {output.fwd_field} \
+                --rev_affine {output.rev_affine} \
+                --rev_warpfield {output.rev_field}
             """
 
     rule dwi_compute_fa_md:
         input:
             image = rules.dwi_bias_correction.output.corrected,
             mask = rules.dwi_topup.output.corrected,
-            bval = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_b700.bval",
-            bvec = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_b700.bvec"
+            bval = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_acq-b700-41_dir-AP_dwi.bval",
+            bvec = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_acq-b700-41_dir-AP_dwi.bvec"
         output:
             fa = f"{OUT_DIR}/{SUBJECT}/{SESSION}/metrics/fa_map.nii.gz",
             md = f"{OUT_DIR}/{SUBJECT}/{SESSION}/metrics/md_map.nii.gz"
@@ -363,19 +376,23 @@ if RUN_DWI:
                 --bias_corr {input.image} \
                 --mask {input.mask} \
                 --bval {input.bval} \
-                --bvec {input.bvec}
+                --bvec {input.bvec} \
+                --fa {output.fa} \
+                --md {output.md}
             """
 
     rule dwi_fa_md_registration:
         input:
             fa = rules.dwi_compute_fa_md.output.fa,
             md = rules.dwi_compute_fa_md.output.md,
-            atlas = rules.bias_field_correction.output.corrected,
+            atlas = lambda wildcards: f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{SUBJECT}_{SESSION}_desc-N4_T1w.nii.gz",
             affine = rules.dwi_registration.output.fwd_affine,
             warp = rules.dwi_registration.output.fwd_field
         output:
             fa_reg = f"{OUT_DIR}/{SUBJECT}/{SESSION}/metrics/fa_registered.nii.gz",
             md_reg = f"{OUT_DIR}/{SUBJECT}/{SESSION}/metrics/md_registered.nii.gz"
+        wildcard_constraints:
+            modality="T1w"
         conda:
             "envs/micaflow.yml"
         shell:
@@ -388,4 +405,4 @@ if RUN_DWI:
                 --mapping {input.warp} \
                 --out_fa {output.fa_reg} \
                 --out_md {output.md_reg}
-            """ 
+            """

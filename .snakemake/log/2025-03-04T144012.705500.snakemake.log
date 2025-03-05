@@ -1,0 +1,8 @@
+Building DAG of jobs...
+MissingInputException in rule dwi_denoise in file /home/ian/GitHub/micaflow2.0/Snakefile, line 214:
+Missing input files for rule dwi_denoise:
+    output: outputs/sub-HC131/ses-01/dwi/denoised_moving.nii.gz
+    affected files:
+        /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_b700.bvec
+        /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_b700.nii.gz
+        /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_b700.bval

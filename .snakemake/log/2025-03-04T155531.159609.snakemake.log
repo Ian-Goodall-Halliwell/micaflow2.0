@@ -1,0 +1,98 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Conda environments: ignored
+Job stats:
+job                        count
+-----------------------  -------
+all                            1
+apply_warp_flair_to_t1w        2
+apply_warp_to_mni              2
+bias_field_correction          2
+calculate_metrics              2
+dwi_apply_topup                1
+dwi_bias_correction            1
+dwi_compute_fa_md              1
+dwi_fa_md_registration         1
+dwi_registration               1
+dwi_skull_strip                1
+dwi_topup                      1
+registration_mni152            1
+registration_t1w               1
+run_texture                    2
+skull_strip                    2
+synthseg_dwi                   1
+synthseg_flair                 1
+synthseg_t1w                   1
+total                         25
+
+Select jobs to execute...
+
+[Tue Mar  4 15:55:31 2025]
+rule dwi_topup:
+    input: outputs/sub-HC131/ses-01/dwi/moving_motion_corrected.nii.gz, /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_dir-PA_dwi.nii.gz, /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_dir-PA_dwi.bval, /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_dir-PA_dwi.bvec
+    output: outputs/sub-HC131/ses-01/xfm/topup-warp-EstFieldMap.nii.gz, outputs/sub-HC131/ses-01/xfm/corrected_image.nii.gz
+    jobid: 22
+    reason: Missing output files: outputs/sub-HC131/ses-01/xfm/topup-warp-EstFieldMap.nii.gz, outputs/sub-HC131/ses-01/xfm/corrected_image.nii.gz
+    resources: tmpdir=/tmp
+
+
+[Tue Mar  4 15:55:31 2025]
+rule skull_strip:
+    input: /home/ian/GitHub/data/sub-HC131/ses-01/anat/sub-HC131_ses-01_FLAIR.nii.gz
+    output: outputs/FLAIR_hdbet.nii.gz, outputs/FLAIR_hdbet_bet.nii.gz
+    jobid: 11
+    reason: Missing output files: outputs/FLAIR_hdbet.nii.gz, outputs/FLAIR_hdbet_bet.nii.gz
+    wildcards: modality=FLAIR
+    resources: tmpdir=/tmp, skull_strip_jobs=1
+
+
+[Tue Mar  4 15:55:31 2025]
+rule skull_strip:
+    input: /home/ian/GitHub/data/sub-HC131/ses-01/anat/sub-HC131_ses-01_run-1_T1w.nii.gz
+    output: outputs/T1w_hdbet.nii.gz, outputs/T1w_hdbet_bet.nii.gz
+    jobid: 4
+    reason: Missing output files: outputs/T1w_hdbet_bet.nii.gz, outputs/T1w_hdbet.nii.gz
+    wildcards: modality=T1w
+    resources: tmpdir=/tmp, skull_strip_jobs=1
+
+[Tue Mar  4 15:55:41 2025]
+Finished job 22.
+1 of 25 steps (4%) done
+Select jobs to execute...
+
+[Tue Mar  4 15:55:41 2025]
+rule dwi_skull_strip:
+    input: outputs/sub-HC131/ses-01/xfm/corrected_image.nii.gz
+    output: outputs/sub-HC131/ses-01/anat/DWI_hdbet.nii.gz, outputs/sub-HC131/ses-01/anat/DWI_hdbet_bet.nii.gz
+    jobid: 23
+    reason: Missing output files: outputs/sub-HC131/ses-01/anat/DWI_hdbet_bet.nii.gz; Input files updated by another job: outputs/sub-HC131/ses-01/xfm/corrected_image.nii.gz
+    resources: tmpdir=/tmp
+
+
+[Tue Mar  4 15:55:41 2025]
+rule dwi_apply_topup:
+    input: outputs/sub-HC131/ses-01/dwi/moving_motion_corrected.nii.gz, outputs/sub-HC131/ses-01/xfm/topup-warp-EstFieldMap.nii.gz, /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_acq-b700-41_dir-AP_dwi.nii.gz
+    output: outputs/sub-HC131/ses-01/xfm/topup_corrected.nii.gz
+    jobid: 19
+    reason: Missing output files: outputs/sub-HC131/ses-01/xfm/topup_corrected.nii.gz; Input files updated by another job: outputs/sub-HC131/ses-01/xfm/topup-warp-EstFieldMap.nii.gz
+    resources: tmpdir=/tmp
+
+Waiting at most 5 seconds for missing files.
+MissingOutputException in rule dwi_skull_strip in file /home/ian/GitHub/micaflow2.0/Snakefile, line 290:
+Job 23  completed successfully, but some output files are missing. Missing files after 5 seconds. This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait:
+outputs/sub-HC131/ses-01/anat/DWI_hdbet.nii.gz
+outputs/sub-HC131/ses-01/anat/DWI_hdbet_bet.nii.gz
+[Tue Mar  4 15:55:56 2025]
+Finished job 11.
+2 of 25 steps (8%) done
+[Tue Mar  4 15:56:03 2025]
+Finished job 4.
+3 of 25 steps (12%) done
+[Tue Mar  4 15:56:03 2025]
+Finished job 19.
+4 of 25 steps (16%) done
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-03-04T155531.159609.snakemake.log

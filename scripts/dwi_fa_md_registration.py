@@ -5,30 +5,41 @@ import numpy as np
 import ants
 import argparse
 
-# ----- Function: Apply Registration to FA/MD Maps -----
+import tempfile
+import shutil
+
 def apply_registration_to_fa_md(fa_path, md_path, atlas, reg_affine, mapping, md_out_path, fa_out_path):
-    # Load the images
-    MNI_atlas = ants.image_read(atlas)
-    fa_map = ants.image_read(fa_path)
-    md_map = ants.image_read(md_path)
-    
-    # Apply the affine transformation
-    fa_affine_trans = ants.apply_transforms(fixed=MNI_atlas, moving=fa_map, transformlist=[reg_affine])
-    md_affine_trans = ants.apply_transforms(fixed=MNI_atlas, moving=md_map, transformlist=[reg_affine])
-    
-    # Save the affine transformed images
-    ants.image_write(fa_affine_trans, "fa_MNI_aff.nii.gz")
-    ants.image_write(md_affine_trans, "md_MNI_aff.nii.gz")
-    
-    # Apply the nonlinear warp using the provided forward field
-    fa_nonlinear = ants.apply_transforms(fixed=MNI_atlas, moving=fa_affine_trans, transformlist=[mapping])
-    md_nonlinear = ants.apply_transforms(fixed=MNI_atlas, moving=md_affine_trans, transformlist=[mapping])
-    
-    # Save the final registered images
-    ants.image_write(fa_nonlinear, fa_out_path)
-    ants.image_write(md_nonlinear, md_out_path)
-    
-    print("FA and MD maps registered and saved as fa_MNI.nii.gz and md_MNI.nii.gz.")
+    # Create a temporary directory
+    temp_dir = tempfile.mkdtemp()
+
+    try:
+        # Load the images
+        MNI_atlas = ants.image_read(atlas)
+        fa_map = ants.image_read(fa_path)
+        md_map = ants.image_read(md_path)
+        
+        # Apply the affine transformation
+        fa_affine_trans = ants.apply_transforms(fixed=MNI_atlas, moving=fa_map, transformlist=[reg_affine])
+        md_affine_trans = ants.apply_transforms(fixed=MNI_atlas, moving=md_map, transformlist=[reg_affine])
+        
+        # Save the affine transformed images to the temp directory
+        fa_affine_path = f"{temp_dir}/fa_MNI_aff.nii.gz"
+        md_affine_path = f"{temp_dir}/md_MNI_aff.nii.gz"
+        ants.image_write(fa_affine_trans, fa_affine_path)
+        ants.image_write(md_affine_trans, md_affine_path)
+        
+        # Apply the nonlinear warp using the provided forward field
+        fa_nonlinear = ants.apply_transforms(fixed=MNI_atlas, moving=fa_affine_trans, transformlist=[mapping])
+        md_nonlinear = ants.apply_transforms(fixed=MNI_atlas, moving=md_affine_trans, transformlist=[mapping])
+        
+        # Save the final registered images
+        ants.image_write(fa_nonlinear, fa_out_path)
+        ants.image_write(md_nonlinear, md_out_path)
+        
+        print("FA and MD maps registered and saved as fa_MNI.nii.gz and md_MNI.nii.gz.")
+    finally:
+        # Remove the temporary directory and its contents
+        shutil.rmtree(temp_dir)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

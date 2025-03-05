@@ -1,0 +1,52 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 24
+Rules claiming more threads will be scaled down.
+Conda environments: ignored
+Job stats:
+job                       count
+----------------------  -------
+all                           1
+dwi_compute_fa_md             1
+dwi_fa_md_registration        1
+total                         3
+
+Select jobs to execute...
+
+[Tue Mar  4 16:44:30 2025]
+rule dwi_compute_fa_md:
+    input: outputs/sub-HC131/ses-01/dwi/denoised_moving_corrected.nii.gz, outputs/sub-HC131/ses-01/xfm/corrected_image.nii.gz, /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_acq-b700-41_dir-AP_dwi.bval, /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_acq-b700-41_dir-AP_dwi.bvec
+    output: outputs/sub-HC131/ses-01/metrics/fa_map.nii.gz, outputs/sub-HC131/ses-01/metrics/md_map.nii.gz
+    jobid: 17
+    reason: Missing output files: outputs/sub-HC131/ses-01/metrics/fa_map.nii.gz, outputs/sub-HC131/ses-01/metrics/md_map.nii.gz
+    resources: tmpdir=/tmp
+
+[Tue Mar  4 16:44:51 2025]
+Finished job 17.
+1 of 3 steps (33%) done
+Select jobs to execute...
+
+[Tue Mar  4 16:44:51 2025]
+rule dwi_fa_md_registration:
+    input: outputs/sub-HC131/ses-01/metrics/fa_map.nii.gz, outputs/sub-HC131/ses-01/metrics/md_map.nii.gz, outputs/sub-HC131/ses-01/anat/sub-HC131_ses-01_desc-N4_T1w.nii.gz, outputs/sub-HC131/ses-01/xfm/sub-HC131_ses-01_from-DWI_to-T1w_fwdaffine.mat, outputs/sub-HC131/ses-01/xfm/sub-HC131_ses-01_from-DWI_to-T1w_fwdfield.nii.gz
+    output: outputs/sub-HC131/ses-01/metrics/fa_registered.nii.gz, outputs/sub-HC131/ses-01/metrics/md_registered.nii.gz
+    jobid: 16
+    reason: Missing output files: outputs/sub-HC131/ses-01/metrics/fa_registered.nii.gz, outputs/sub-HC131/ses-01/metrics/md_registered.nii.gz; Input files updated by another job: outputs/sub-HC131/ses-01/metrics/fa_map.nii.gz, outputs/sub-HC131/ses-01/metrics/md_map.nii.gz
+    resources: tmpdir=/tmp
+
+[Tue Mar  4 16:44:54 2025]
+Finished job 16.
+2 of 3 steps (67%) done
+Select jobs to execute...
+
+[Tue Mar  4 16:44:54 2025]
+localrule all:
+    input: outputs/sub-HC131/ses-01/textures/sub-HC131_ses-01_T1w_textures_output_gradient_magnitude.nii, outputs/sub-HC131/ses-01/textures/sub-HC131_ses-01_T1w_textures_output_relative_intensity.nii, outputs/sub-HC131/ses-01/textures/sub-HC131_ses-01_FLAIR_textures_output_gradient_magnitude.nii, outputs/sub-HC131/ses-01/textures/sub-HC131_ses-01_FLAIR_textures_output_relative_intensity.nii, outputs/sub-HC131/ses-01/metrics/T1w_sub-HC131_ses-01_jaccard.csv, outputs/sub-HC131/ses-01/metrics/FLAIR_sub-HC131_ses-01_jaccard.csv, outputs/sub-HC131/ses-01/metrics/fa_registered.nii.gz, outputs/sub-HC131/ses-01/metrics/md_registered.nii.gz, outputs/sub-HC131/ses-01/anat/sub-HC131_ses-01_space-T1w_T1w.nii.gz, outputs/sub-HC131/ses-01/anat/sub-HC131_ses-01_space-T1w_FLAIR.nii.gz
+    jobid: 0
+    reason: Input files updated by another job: outputs/sub-HC131/ses-01/metrics/fa_registered.nii.gz, outputs/sub-HC131/ses-01/metrics/md_registered.nii.gz
+    resources: tmpdir=/tmp
+
+[Tue Mar  4 16:44:54 2025]
+Finished job 0.
+3 of 3 steps (100%) done
+Complete log: .snakemake/log/2025-03-04T164430.439925.snakemake.log
