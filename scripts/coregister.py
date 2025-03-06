@@ -12,9 +12,30 @@ def ants_linear_nonlinear_registration(
     rev_warp_file=None,
     rev_affine_file=None,
 ):
-    """
-    Perform linear (rigid + affine) and nonlinear registration using ANTsPy (SyN transform).
-    Optionally save the warp field and affine transform to user-specified files.
+    """Perform linear (rigid + affine) and nonlinear registration using ANTsPy.
+    
+    This function performs registration between two images using ANTs' SyNRA transform, 
+    which includes both linear (rigid + affine) and nonlinear (SyN) components. 
+    The registered image is saved to the specified output path, and the transform 
+    files can optionally be saved as well.
+    
+    Args:
+        fixed_file (str): Path to the fixed/reference image.
+        moving_file (str): Path to the moving image that will be registered.
+        out_file (str, optional): Path where the registered image will be saved. 
+            Defaults to "registered_image.nii".
+        warp_file (str, optional): Path to save the forward warp field. 
+            Defaults to None.
+        affine_file (str, optional): Path to save the forward affine transform. 
+            Defaults to None.
+        rev_warp_file (str, optional): Path to save the reverse warp field. 
+            Defaults to None.
+        rev_affine_file (str, optional): Path to save the reverse affine transform. 
+            Defaults to None.
+            
+    Returns:
+        None: The function saves the registered image and transform files to disk
+        but does not return any values.
     """
     # Load images
     fixed = ants.image_read(fixed_file)
@@ -46,8 +67,7 @@ def ants_linear_nonlinear_registration(
         shutil.copyfile(transforms["invtransforms"][1], rev_affine_file)
         print(f"Saved reverse affine transform as {rev_affine_file}")
 
-
-def main():
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Run linear + nonlinear (SyN) registration using ANTsPy."
     )
@@ -90,7 +110,3 @@ def main():
         rev_affine_file=args.rev_affine_file,
     )
     print(f"Registration complete. Saved as {args.out_file}")
-
-
-if __name__ == "__main__":
-    main()

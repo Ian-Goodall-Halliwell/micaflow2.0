@@ -5,9 +5,29 @@ from tqdm import tqdm
 
 
 def run_motion_correction(dwi_path, bval_path, bvec_path, output):
-    """
-    Replace the previous motion correction logic with the QuickSyN-based
-    registration you provided for each volume in the DWI.
+    """Perform motion correction on diffusion-weighted images (DWI).
+    
+    This function corrects for subject motion in DWI data by registering each volume 
+    to the first volume (assumed to be a B0 image). It uses ANTs SyNRA registration
+    which combines rigid, affine, and deformable transformations to achieve robust 
+    alignment between volumes.
+    
+    Args:
+        dwi_path (str): Path to the input DWI NIfTI file.
+        bval_path (str): Path to the b-values file (.bval). Currently unused but 
+            included for API consistency.
+        bvec_path (str): Path to the b-vectors file (.bvec). Currently unused but 
+            included for API consistency.
+        output (str): Path where the motion-corrected DWI will be saved.
+        
+    Returns:
+        str: Path to the saved motion-corrected DWI image.
+        
+    Notes:
+        The function assumes the first volume (index 0) is a B0 image that serves
+        as the reference for registration. All other volumes are aligned to this
+        reference using ANTs' SyNRA transformation. Progress is displayed using 
+        a tqdm progress bar.
     """
     # Read the main DWI file using ANTs
     dwi_ants = ants.image_read(dwi_path)
@@ -30,16 +50,11 @@ def run_motion_correction(dwi_path, bval_path, bvec_path, output):
             moving_data, origin=dwi_ants.origin[:3], spacing=dwi_ants.spacing[:3]
         )
 
-        # Rigid registration
-        rigid_reg = ants.registration(
-            fixed=b0_ants, moving=moving_ants, type_of_transform="QuickRigid"
-        )
         # Non-linear registration (SyNOnly) using the rigid transform as initial
         quicksyn_reg = ants.registration(
             fixed=b0_ants,
-            moving=rigid_reg["warpedmovout"],
-            initial_transform=rigid_reg["fwdtransforms"][0],
-            type_of_transform="SyNOnly",
+            moving=moving_ants,
+            type_of_transform="SyNRA",
         )
 
         # Place the registered volume in the output array

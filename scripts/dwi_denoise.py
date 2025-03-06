@@ -4,8 +4,28 @@ from dipy.denoise.patch2self import patch2self
 from dipy.io.gradients import read_bvals_bvecs
 
 
-# ----- Function: Denoise -----
+
 def run_denoise(moving, moving_bval, moving_bvec, output):
+    """Denoise diffusion-weighted images using the Patch2Self algorithm.
+    
+    This function applies Patch2Self denoising to diffusion-weighted images (DWI),
+    which uses a self-supervised learning approach to remove noise while preserving 
+    anatomical structure. It leverages redundant information across diffusion gradients.
+    
+    Args:
+        moving (str): Path to the input DWI image (NIfTI file).
+        moving_bval (str): Path to the b-values file (.bval).
+        moving_bvec (str): Path to the b-vectors file (.bvec).
+        output (str): Path where the denoised image will be saved.
+        
+    Returns:
+        str: Path to the saved denoised image.
+        
+    Notes:
+        The implementation uses an Ordinary Least Squares regression model,
+        shifts intensity values to ensure positivity, and does not denoise
+        b0 volumes separately. The b0 threshold is set to 50 s/mm².
+    """
     moving_image = nib.load(moving)
     moving_bval_value, moving_bvec_value = read_bvals_bvecs(moving_bval, moving_bvec)
     denoised = patch2self(

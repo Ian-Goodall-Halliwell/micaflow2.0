@@ -582,7 +582,8 @@ def build_model(path_model_segmentation,
         # smooth posteriors if specified
         if sigma_smoothing > 0:
             last_tensor = net.output
-            last_tensor._keras_shape = tuple(last_tensor.get_shape().as_list())
+            if hasattr(last_tensor, 'get_shape'):
+                last_tensor._keras_shape = tuple(last_tensor.get_shape().as_list())
             last_tensor = layers.GaussianBlur(sigma=sigma_smoothing)(last_tensor)
             net = Model(inputs=net.inputs, outputs=last_tensor)
 
@@ -634,7 +635,8 @@ def build_model(path_model_segmentation,
 
         # smooth predictions
         last_tensor = net.output
-        last_tensor._keras_shape = tuple(last_tensor.get_shape().as_list())
+        if hasattr(last_tensor, 'get_shape'):
+            last_tensor._keras_shape = tuple(last_tensor.get_shape().as_list())
         last_tensor = layers.GaussianBlur(sigma=0.5)(last_tensor)
         net = Model(inputs=net.inputs, outputs=[net.get_layer(name_segm_prediction_layer).output, last_tensor])
 

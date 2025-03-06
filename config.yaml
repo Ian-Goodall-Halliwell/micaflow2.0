@@ -6,3 +6,4 @@ threads: 4         # Number of CPU threads to use
 data_directory: "/home/ian/GitHub/data"  # Path to your BIDS-compatible data directory
 run_dwi: true       # Whether to run DWI processing
 cleanup: true       # Whether to clean up work directory 
+cpu: true

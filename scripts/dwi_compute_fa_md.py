@@ -5,6 +5,24 @@ import nibabel as nib
 
 # ----- Function: FA/MD Estimation -----
 def compute_fa_md(bias_corr_path, mask_path, moving_bval, moving_bvec, fa_path, md_path):
+    """Compute Fractional Anisotropy (FA) and Mean Diffusivity (MD) maps from diffusion-weighted images.
+    
+    This function takes a bias-corrected diffusion-weighted image (DWI) and a brain mask,
+    creates a diffusion tensor model, and calculates FA and MD maps. The resulting
+    maps are saved as NIfTI files at the specified output paths.
+    
+    Args:
+        bias_corr_path (str): Path to the bias-corrected DWI image (NIfTI file).
+        mask_path (str): Path to the brain mask image (NIfTI file).
+        moving_bval (str): Path to the b-values file (.bval).
+        moving_bvec (str): Path to the b-vectors file (.bvec).
+        fa_path (str): Output path for the fractional anisotropy (FA) map.
+        md_path (str): Output path for the mean diffusivity (MD) map.
+        
+    Returns:
+        tuple: A tuple containing two strings (fa_path, md_path) - the paths to the 
+              saved FA and MD NIfTI files.
+    """
     bias_corr = nib.load(bias_corr_path)
     mask = nib.load(mask_path)
     masked_data = bias_corr.get_fdata() * mask.get_fdata()[..., None]

@@ -171,9 +171,9 @@ def gaussian_kernel(sigma, max_sigma=None, blur_range=None, separable=True):
 
         # compute gaussians
         sigma_is_0 = tf.equal(sigma_tens, 0)
-        exp_term = -K.square(diff) / (2 * tf.where(sigma_is_0, tf.ones_like(sigma_tens), sigma_tens)**2)
+        exp_term = -tf.square(diff) / (2 * tf.where(sigma_is_0, tf.ones_like(sigma_tens), sigma_tens)**2)
         norms = exp_term - tf.math.log(tf.where(sigma_is_0, tf.ones_like(sigma_tens), np.sqrt(2 * np.pi) * sigma_tens))
-        kernels = K.sum(norms, -1)
+        kernels = tf.reduce_sum(norms, -1)
         kernels = tf.exp(kernels)
         kernels /= tf.reduce_sum(kernels)
         kernels = tf.expand_dims(tf.expand_dims(kernels, -1), -1)

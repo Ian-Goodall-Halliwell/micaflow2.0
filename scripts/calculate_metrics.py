@@ -1,9 +1,10 @@
 import sys
 import csv
 import os
+import shutil
+import tempfile
 from nipype.algorithms.metrics import Overlap
 import nibabel as nib
-
 
 def apply_threshold(image_path, threshold=0.5):
     img = nib.load(image_path)
@@ -14,34 +15,59 @@ def apply_threshold(image_path, threshold=0.5):
     nib.save(nib.Nifti1Image(data, img.affine), new_image_path)
     return new_image_path
 
-
 def main(image, reference, output_file, threshold=0.5, mask_path=None):
+    # Create a temporary directory
+    temp_dir = tempfile.mkdtemp()
 
-    # Apply threshold and use the new file paths
-    image_thr = apply_threshold(image, threshold)
-    reference_thr = apply_threshold(reference, threshold)
+    try:
+        # Copy necessary files into the temporary directory
+        temp_image = os.path.join(temp_dir, os.path.basename(image))
+        temp_reference = os.path.join(temp_dir, os.path.basename(reference))
+        shutil.copy(image, temp_image)
+        shutil.copy(reference, temp_reference)
 
-    overlap = Overlap()
-    overlap.inputs.volume1 = image_thr
-    overlap.inputs.volume2 = reference_thr
+        if mask_path:
+            temp_mask = os.path.join(temp_dir, os.path.basename(mask_path))
+            shutil.copy(mask_path, temp_mask)
 
-    if mask_path:
-        # Optionally process mask similarly if thresholding is required
-        mask_thr = apply_threshold(mask_path, threshold)
-        overlap.inputs.mask_volume = mask_thr
+        # Change the current working directory to the temporary directory
+        original_cwd = os.getcwd()
+        os.chdir(temp_dir)
 
-    res = overlap.run()
+        # Apply threshold and use the new file paths
+        image_thr = apply_threshold(temp_image, threshold)
+        reference_thr = apply_threshold(temp_reference, threshold)
 
-    # Print the number of ROIs
-    num_rois = len(res.outputs.roi_ji)
-    print("Number of ROIs:", num_rois)
+        overlap = Overlap()
+        overlap.inputs.volume1 = image_thr
+        overlap.inputs.volume2 = reference_thr
 
-    with open(output_file, "w", newline="") as file:
-        csvwriter = csv.writer(file)
-        csvwriter.writerow(["ROI", "Jaccard Index"])
-        for i, ji in enumerate(res.outputs.roi_ji):
-            csvwriter.writerow([i + 1, ji])
+        if mask_path:
+            # Optionally process mask similarly if thresholding is required
+            mask_thr = apply_threshold(temp_mask, threshold)
+            overlap.inputs.mask_volume = mask_thr
 
+        res = overlap.run()
+
+        # Print the number of ROIs
+        num_rois = len(res.outputs.roi_ji)
+        print("Number of ROIs:", num_rois)
+
+        temp_output_file = os.path.join(temp_dir, "output.csv")
+        with open(temp_output_file, "w", newline="") as file:
+            csvwriter = csv.writer(file)
+            csvwriter.writerow(["ROI", "Jaccard Index"])
+            for i, ji in enumerate(res.outputs.roi_ji):
+                csvwriter.writerow([i + 1, ji])
+
+        # Copy the output CSV file to the desired location
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+        shutil.copy(temp_output_file, output_file)
+    finally:
+        # Change back to the original working directory
+        os.chdir(original_cwd)
+        # Remove the temporary directory and its contents
+        shutil.rmtree(temp_dir)
 
 if __name__ == "__main__":
     if len(sys.argv) < 4 or len(sys.argv) > 5:

@@ -9,6 +9,31 @@ import tempfile
 import shutil
 
 def apply_registration_to_fa_md(fa_path, md_path, atlas, reg_affine, mapping, md_out_path, fa_out_path):
+    """Register FA and MD maps to a reference atlas using provided transformations.
+    
+    This function applies both affine and nonlinear transformations to fractional anisotropy 
+    (FA) and mean diffusivity (MD) maps to register them to a reference atlas space (typically MNI).
+    The registration is performed in two steps: first an affine transformation, followed by
+    a nonlinear warp. Intermediate results are stored in a temporary directory that is
+    automatically cleaned up when processing is complete.
+    
+    Args:
+        fa_path (str): Path to the input FA map NIfTI file.
+        md_path (str): Path to the input MD map NIfTI file.
+        atlas (str): Path to the reference atlas NIfTI file (e.g., MNI template).
+        reg_affine (str): Path to the affine transformation file (ANTs .mat format).
+        mapping (str): Path to the nonlinear warp field (ANTs format).
+        md_out_path (str): Output path where the registered MD map will be saved.
+        fa_out_path (str): Output path where the registered FA map will be saved.
+        
+    Returns:
+        None: The function saves the registered images to the specified output paths
+        and prints a confirmation message but does not return any values.
+        
+    Notes:
+        This function requires ANTsPy for image loading, transformation, and writing.
+        The temporary files are automatically removed even if an exception occurs.
+    """
     # Create a temporary directory
     temp_dir = tempfile.mkdtemp()
 

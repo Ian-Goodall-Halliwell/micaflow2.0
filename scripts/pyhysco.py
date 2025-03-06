@@ -9,8 +9,85 @@ import argparse
 import tempfile
 import os
 
+def apply_warpfield_y(image, warpfield):
+    """Apply a warpfield to an image along the second dimension (y-axis).
+    
+    This function deforms an input image according to the provided warpfield,
+    with displacements applied specifically along the y-axis. The function uses
+    coordinate interpolation to resample the image at the warped grid positions.
+    
+    Parameters
+    ----------
+    image : numpy.ndarray
+        The input 3D image to be warped.
+    warpfield : numpy.ndarray
+        The displacement field specifying pixel shifts along the y-axis.
+        Must have the same spatial dimensions as the input image.
+        
+    Returns
+    -------
+    warped_image : numpy.ndarray
+        The warped image after applying the displacements.
+        
+    Notes
+    -----
+    The function uses nearest-neighbor interpolation at boundaries and
+    linear interpolation elsewhere for resampling the image.
+    """
+    # Create a grid of coordinates
+    coords = np.meshgrid(
+        np.arange(image.shape[0]),
+        np.arange(image.shape[1]),
+        np.arange(image.shape[2]),
+        indexing="ij",
+    )
+
+    # Apply the warpfield to the coordinates along the second dimension (y-axis)
+    warped_coords = [coords[0], coords[1] + warpfield, coords[2]]
+
+    # Interpolate the image at the warped coordinates
+    warped_image = map_coordinates(
+        image, warped_coords, order=1, mode="nearest"
+    )
+
+    return warped_image
 
 def run(data_image, reverse_image, output_name, output_warp):
+    """Perform EPI distortion correction using phase-encoding reversed images.
+    
+    This function implements the HYSCO (HYperellastic Susceptibility artifact COrrection)
+    algorithm for correcting geometric distortions in echo-planar imaging (EPI) MRI data.
+    It uses a pair of images acquired with opposite phase-encoding directions to estimate
+    and correct susceptibility-induced distortions.
+    
+    The workflow includes:
+    1. Initial affine registration of the reversed phase-encoding image to the main image
+    2. Setting up the EPI distortion correction optimization problem
+    3. Solving for the optimal field map using an ADMM optimizer
+    4. Applying the field map to correct the distortions in the main image
+    
+    Parameters
+    ----------
+    data_image : str
+        Path to the main EPI image (NIfTI file).
+    reverse_image : str
+        Path to the reverse phase-encoded EPI image (NIfTI file).
+    output_name : str
+        Path where the distortion-corrected image will be saved.
+    output_warp : str
+        Path where the estimated field map will be saved.
+        
+    Returns
+    -------
+    None
+        The function saves the corrected image and field map to the specified output paths.
+        
+    Notes
+    -----
+    The function extracts the first volume (3D) from the input 4D images.
+    GPU acceleration is used if available; otherwise, CPU is used.
+    Intermediate files are saved in a temporary directory that is cleaned up after processing.
+    """
     # Create a temporary directory
     with tempfile.TemporaryDirectory() as temp_dir:
         # Fix dimensions
@@ -79,47 +156,13 @@ def run(data_image, reverse_image, output_name, output_warp):
         opt.run_correction(B0)
         # save field map and corrected images
         opt.apply_correction()
+        
         # save the field map
-
         fieldmap = nib.load(resultspath + "-EstFieldMap.nii.gz").get_fdata()
 
         # Ensure the warpfield has the same dimensions as the image
         if fieldmap.shape[1] > im1.shape[1]:
             fieldmap = fieldmap[:, : im1.shape[1], :]
-
-        def apply_warpfield_y(image, warpfield):
-            """
-            Apply a warpfield to an image along the second dimension (y-axis).
-
-            Parameters
-            ----------
-            image : numpy.ndarray
-                The input image to be warped.
-            warpfield : numpy.ndarray
-                The warpfield to apply to the image.
-
-            Returns
-            -------
-            warped_image : numpy.ndarray
-                The warped image.
-            """
-            # Create a grid of coordinates
-            coords = np.meshgrid(
-                np.arange(image.shape[0]),
-                np.arange(image.shape[1]),
-                np.arange(image.shape[2]),
-                indexing="ij",
-            )
-
-            # Apply the warpfield to the coordinates along the second dimension (y-axis)
-            warped_coords = [coords[0], coords[1] + warpfield, coords[2]]
-
-            # Interpolate the image at the warped coordinates
-            warped_image = map_coordinates(
-                image, warped_coords, order=1, mode="nearest"
-            )
-
-            return warped_image
 
         # Apply the warpfield to the image along the second dimension
         warped_im1_y = apply_warpfield_y(im1, fieldmap)

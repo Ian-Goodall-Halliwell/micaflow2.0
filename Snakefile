@@ -12,6 +12,8 @@ THREADS = config.get("threads", 1)
 DATA_DIRECTORY = config.get("data_directory", "")
 RUN_DWI = config.get("run_dwi", True)
 CLEANUP = config.get("cleanup", True)
+CPU = config.get("cpu", True)
+CPU = "--cpu" if CPU else ""
 
 # Atlas paths
 ATLAS_DIR = "atlas"
@@ -27,9 +29,9 @@ def get_final_output():
             f"{OUT_DIR}/{SUBJECT}/{SESSION}/textures/{SUBJECT}_{SESSION}_{modality}_textures_output_gradient_magnitude.nii",
             f"{OUT_DIR}/{SUBJECT}/{SESSION}/textures/{SUBJECT}_{SESSION}_{modality}_textures_output_relative_intensity.nii"
         ])
-    # Add metrics outputs
-    for modality in ["T1w", "FLAIR"]:
-        outputs.append(f"{OUT_DIR}/{SUBJECT}/{SESSION}/metrics/{modality}_{SUBJECT}_{SESSION}_jaccard.csv")
+    # # Add metrics outputs
+    # for modality in ["T1w", "FLAIR"]:
+    #     outputs.append(f"{OUT_DIR}/{SUBJECT}/{SESSION}/metrics/{modality}_{SUBJECT}_{SESSION}_jaccard.csv")
     
     if RUN_DWI:
         outputs.extend([
@@ -42,7 +44,7 @@ def get_final_output():
 rule all:
     input:
         get_final_output(),
-        expand(f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{SUBJECT}_{SESSION}_space-T1w_{{modality}}.nii.gz", modality=["T1w", "FLAIR"])
+        expand(os.path.join(OUT_DIR, SUBJECT, SESSION, "anat", f"{SUBJECT}_{SESSION}_space-T1w_{{modality}}.nii.gz"), modality=["T1w", "FLAIR"])
 
 rule skull_strip:
     input:
@@ -50,12 +52,10 @@ rule skull_strip:
     output:
         brain = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{{modality}}_hdbet.nii.gz",
         mask = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{{modality}}_hdbet_bet.nii.gz"
-    conda:
-        "envs/micaflow.yml"
     resources:
         skull_strip_jobs=1  # Allows only one job of this type to run at a time
     shell:
-        "python3 scripts/hdbet.py --input {input.image} --output {output.brain}"
+        "python3 scripts/hdbet.py --input {input.image} --output {output.brain} {CPU}"
 
 rule bias_field_correction:
     input:
@@ -63,8 +63,6 @@ rule bias_field_correction:
         mask = rules.skull_strip.output.mask
     output:
         corrected = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{SUBJECT}_{SESSION}_desc-N4_{{modality}}.nii.gz"
-    conda:
-        "envs/micaflow.yml"
     shell:
         "python3 scripts/N4BiasFieldCorrection.py -i {input.image} -o {output.corrected} -m {input.mask}"
 
@@ -73,11 +71,9 @@ rule synthseg_t1w:
         image = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/anat/{SUBJECT}_{SESSION}_run-1_T1w.nii.gz"
     output:
         seg = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/T1w_parcellation.nii.gz"
-    conda:
-        "envs/micaflow.yml"
     threads: THREADS
     shell:
-        "python3 scripts/run_synthseg.py --i {input.image} --o {output.seg} --parc --fast --threads {threads}"
+        "python3 scripts/run_synthseg.py --i {input.image} --o {output.seg} --parc --fast --threads {threads} {CPU}"
 
 rule synthseg_flair:
     input:
@@ -85,11 +81,9 @@ rule synthseg_flair:
         t1w_seg = rules.synthseg_t1w.output.seg
     output:
         seg = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/FLAIR_parcellation.nii.gz"
-    conda:
-        "envs/micaflow.yml"
     threads: THREADS
     shell:
-        "python3 scripts/run_synthseg.py --i {input.image} --o {output.seg} --parc --fast --threads {threads}"
+        "python3 scripts/run_synthseg.py --i {input.image} --o {output.seg} --parc --fast --threads {threads} {CPU}"
 
 rule registration_t1w:
     input:
@@ -101,8 +95,6 @@ rule registration_t1w:
         bak_field = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-FLAIR_to-T1w_bakfield.nii.gz",
         fwd_affine = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-FLAIR_to-T1w_fwdaffine.mat",
         bak_affine = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-FLAIR_to-T1w_bakaffine.mat"
-    conda:
-        "envs/micaflow.yml"
     shell:
         """
         python3 scripts/coregister.py \
@@ -125,8 +117,6 @@ rule registration_mni152:
         bak_field = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-T1w_to-MNI152_bakfield.nii.gz",
         fwd_affine = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-T1w_to-MNI152_fwdaffine.mat",
         bak_affine = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-T1w_to-MNI152_bakaffine.mat"
-    conda:
-        "envs/micaflow.yml"
     shell:
         """
         python3 scripts/coregister.py \
@@ -147,8 +137,6 @@ rule apply_warp_flair_to_t1w:
         reference = rules.bias_field_correction.output.corrected
     output:
         warped = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{SUBJECT}_{SESSION}_space-T1w_{{modality}}.nii.gz"
-    conda:
-        "envs/micaflow.yml"
     shell:
         """
         python3 scripts/use_warp.py \
@@ -167,8 +155,6 @@ rule apply_warp_to_mni:
         reference = ATLAS
     output:
         warped = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/{SUBJECT}_{SESSION}_space-MNI152_{{modality}}.nii.gz"
-    conda:
-        "envs/micaflow.yml"
     shell:
         """
         python3 scripts/use_warp.py \
@@ -186,8 +172,6 @@ rule run_texture:
     output:
         gradient = f"{OUT_DIR}/{SUBJECT}/{SESSION}/textures/{SUBJECT}_{SESSION}_{{modality}}_textures_output_gradient_magnitude.nii",
         intensity = f"{OUT_DIR}/{SUBJECT}/{SESSION}/textures/{SUBJECT}_{SESSION}_{{modality}}_textures_output_relative_intensity.nii"
-    conda:
-        "envs/micaflow.yml"
     shell:
         """
         python3 scripts/runtexture.py \
@@ -202,8 +186,6 @@ rule calculate_metrics:
         atlas = ATLAS
     output:
         metrics = f"{OUT_DIR}/{SUBJECT}/{SESSION}/metrics/{{modality}}_{SUBJECT}_{SESSION}_jaccard.csv"
-    conda:
-        "envs/micaflow.yml"
     shell:
         """
         python3 scripts/calculate_metrics.py \
@@ -220,8 +202,6 @@ if RUN_DWI:
             bvec = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_acq-b700-41_dir-AP_dwi.bvec"
         output:
             denoised = f"{OUT_DIR}/{SUBJECT}/{SESSION}/dwi/denoised_moving.nii.gz"
-        conda:
-            "envs/micaflow.yml"
         shell:
             """
             python3 scripts/dwi_denoise.py \
@@ -238,8 +218,6 @@ if RUN_DWI:
             bvec = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_acq-b700-41_dir-AP_dwi.bvec"
         output:
             corrected = f"{OUT_DIR}/{SUBJECT}/{SESSION}/dwi/moving_motion_corrected.nii.gz"
-        conda:
-            "envs/micaflow.yml"
         shell:
             """
             python3 scripts/dwi_motioncorrection.py \
@@ -258,8 +236,6 @@ if RUN_DWI:
         output:
             warp = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/topup-warp-EstFieldMap.nii.gz",
             corrected = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/corrected_image.nii.gz"
-        conda:
-            "envs/micaflow.yml"
         shell:
             """
             python3 scripts/pyhysco.py \
@@ -276,8 +252,6 @@ if RUN_DWI:
             affine = f"{DATA_DIRECTORY}/{SUBJECT}/{SESSION}/dwi/{SUBJECT}_{SESSION}_acq-b700-41_dir-AP_dwi.nii.gz"
         output:
             corrected = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/topup_corrected.nii.gz"
-        conda:
-            "envs/micaflow.yml"
         shell:
             """
             python3 scripts/dwi_applytopup.py \
@@ -293,13 +267,12 @@ if RUN_DWI:
         output:
             image = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/DWI_hdbet.nii.gz",
             mask = f"{OUT_DIR}/{SUBJECT}/{SESSION}/anat/DWI_hdbet_bet.nii.gz"
-        conda:
-            "envs/micaflow.yml"
         shell:
             """
             python3 scripts/hdbet.py \
                 --input {input.image} \
-                --output {output.image}
+                --output {output.image} \
+                {CPU}
             """
 
     rule dwi_bias_correction:
@@ -308,8 +281,6 @@ if RUN_DWI:
             mask = rules.dwi_skull_strip.output.mask
         output:
             corrected = f"{OUT_DIR}/{SUBJECT}/{SESSION}/dwi/denoised_moving_corrected.nii.gz"
-        conda:
-            "envs/micaflow.yml"
         shell:
             """
             python3 scripts/dwi_biascorrection.py \
@@ -324,8 +295,6 @@ if RUN_DWI:
             flair_seg = rules.synthseg_flair.output.seg
         output:
             seg = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/DWI_parcellation.nii.gz"
-        conda:
-            "envs/micaflow.yml"
         threads: THREADS
         shell:
             """
@@ -334,7 +303,8 @@ if RUN_DWI:
                 --o {output.seg} \
                 --parc \
                 --fast \
-                --threads {threads}
+                --threads {threads} \
+                {CPU}
             """
 
     rule dwi_registration:
@@ -346,8 +316,6 @@ if RUN_DWI:
             fwd_affine = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-DWI_to-T1w_fwdaffine.mat",
             rev_field = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-DWI_to-T1w_revfield.nii.gz",
             rev_affine = f"{OUT_DIR}/{SUBJECT}/{SESSION}/xfm/{SUBJECT}_{SESSION}_from-DWI_to-T1w_revaffine.mat"
-        conda:
-            "envs/micaflow.yml"
         shell:
             """
             python3 scripts/dwi_reg.py \
@@ -368,8 +336,6 @@ if RUN_DWI:
         output:
             fa = f"{OUT_DIR}/{SUBJECT}/{SESSION}/metrics/fa_map.nii.gz",
             md = f"{OUT_DIR}/{SUBJECT}/{SESSION}/metrics/md_map.nii.gz"
-        conda:
-            "envs/micaflow.yml"
         shell:
             """
             python3 scripts/dwi_compute_fa_md.py \
@@ -393,8 +359,6 @@ if RUN_DWI:
             md_reg = f"{OUT_DIR}/{SUBJECT}/{SESSION}/metrics/md_registered.nii.gz"
         wildcard_constraints:
             modality="T1w"
-        conda:
-            "envs/micaflow.yml"
         shell:
             """
             python3 scripts/dwi_fa_md_registration.py \

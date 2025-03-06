@@ -3,8 +3,37 @@ import argparse
 
 
 def apply_warp(moving_file, reference_file, affine_file, warp_file, out_file):
-    """
-    Apply an affine transform and a warp field to a moving image, resampling into the reference image space.
+    """Apply an affine transform and a warp field to a moving image.
+    
+    This function takes a moving image and applies both an affine transformation 
+    and a nonlinear warp field to register it to a reference image space. The 
+    transformation is applied using ANTsPy's apply_transforms function with the
+    appropriate transform order.
+    
+    Parameters
+    ----------
+    moving_file : str
+        Path to the moving image that will be transformed (.nii.gz).
+    reference_file : str
+        Path to the reference/fixed image that defines the target space (.nii.gz).
+    affine_file : str
+        Path to the affine transformation file (.mat).
+    warp_file : str
+        Path to the nonlinear warp field (.nii.gz).
+    out_file : str
+        Path where the transformed image will be saved.
+        
+    Returns
+    -------
+    None
+        The function saves the transformed image to the specified output path
+        but does not return any values.
+        
+    Notes
+    -----
+    The order of transforms matters: the warp field is applied first, followed 
+    by the affine transformation. This is the standard order in ANTs for 
+    composite transformations.
     """
     # Load images and transforms
     moving_img = ants.image_read(moving_file)

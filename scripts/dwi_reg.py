@@ -8,9 +8,29 @@ from tqdm import tqdm
 import shutil
 
 def run(dwi_path, atlas_path, warp_file=None, affine_file=None, rev_warp_file=None, rev_affine_file=None):
-    """
-    Replace the previous motion correction logic with the QuickSyN-based 
-    registration you provided for each volume in the DWI.
+    """Register a diffusion-weighted image to a reference atlas using ANTs.
+    
+    This function performs registration between a diffusion-weighted image (DWI) and 
+    a reference atlas using ANTs' SyNRA transform, which includes both linear (rigid + affine) 
+    and nonlinear (SyN) components. The transformation files can optionally be saved
+    for later use.
+    
+    Args:
+        dwi_path (str): Path to the input DWI image (NIfTI file).
+        atlas_path (str): Path to the reference atlas image (NIfTI file).
+        warp_file (str, optional): Path to save the forward warp field. Defaults to None.
+        affine_file (str, optional): Path to save the forward affine transform. Defaults to None.
+        rev_warp_file (str, optional): Path to save the reverse warp field. Defaults to None.
+        rev_affine_file (str, optional): Path to save the reverse affine transform. Defaults to None.
+        
+    Returns:
+        None: The function saves transformation files to the specified paths but does not
+        return any values.
+        
+    Notes:
+        The function uses ANTsPy to perform the registration and assumes the DWI image
+        is already preprocessed (bias-corrected, possibly denoised). The function saves
+        both forward and inverse transformations if paths are provided.
     """
     # Read the main DWI file using ANTs
     dwi_ants = ants.image_read(dwi_path)
@@ -49,38 +69,6 @@ def run(dwi_path, atlas_path, warp_file=None, affine_file=None, rev_warp_file=No
         shutil.copyfile(transforms["invtransforms"][1], rev_affine_file)
         print(f"Saved reverse affine transform as {rev_affine_file}")
         
-
-    # # Rigid registration
-    # rigid_reg = ants.registration(
-    #     fixed=atlas_ants,
-    #     moving=b0_ants,
-    #     type_of_transform='QuickRigid'
-    # )
-    # # Non-linear registration (SyNOnly) using the rigid transform as initial
-    # quicksyn_reg = ants.registration(
-    #     fixed=atlas_ants,
-    #     moving=rigid_reg['warpedmovout'],
-    #     initial_transform=rigid_reg['fwdtransforms'][0],
-    #     type_of_transform='SyNOnly'
-    # )
-
-  
-    # # If specified, save the transform files
-    # # Typically, transforms["fwdtransforms"][0] is the warp field, and [1] is the affine.
-    # if warp_file:
-    #     shutil.copyfile(quicksyn_reg["fwdtransforms"][0], warp_file)
-    #     print(f"Saved warp field as {warp_file}")
-    # if affine_file:
-    #     shutil.copyfile(rigid_reg["fwdtransforms"][0], affine_file)
-    #     print(f"Saved affine transform as {affine_file}")
-    # if rev_warp_file:
-    #     shutil.copyfile(quicksyn_reg["invtransforms"][0], rev_warp_file)
-    #     print(f"Saved reverse warp field as {rev_warp_file}")
-    # if rev_affine_file:
-    #     shutil.copyfile(rigid_reg["invtransforms"][0], rev_affine_file)
-    #     print(f"Saved reverse affine transform as {rev_affine_file}")
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Perform linear registration of bias-corrected DWI to an atlas."

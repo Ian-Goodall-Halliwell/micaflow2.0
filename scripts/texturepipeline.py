@@ -2,10 +2,9 @@ import os
 import random
 import string
 from collections import Counter
-
 import ants
 import numpy as np
-
+import time
 
 def write_nifti(input, id, output_dir, type):
     output_fname = os.path.join(output_dir, id + '_' + type + '.nii.gz')
@@ -53,29 +52,6 @@ def random_case_id():
     x = letters[:3].lower() + '_' + digits[:4]
     return x
 
-import os
-
-# restrict compute to CPU only
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-
-import multiprocessing
-import sys
-import time
-
-import ants  # type: ignore[import-untyped]
-import numpy as np
-
-# import zipfile
-from PIL import Image
-
-# reduce tensorflow logging verbosity
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
-os.environ['ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS'] = str(multiprocessing.cpu_count())
-os.environ['ANTS_RANDOM_SEED'] = '666'
-
-
-
 class noelTexturesPy:
     def __init__(
         self,
@@ -99,9 +75,6 @@ class noelTexturesPy:
 
     def segmentation(self):
         print('computing GM, WM, CSF segmentation')
-        # https://antsx.github.io/ANTsPyNet/docs/build/html/utilities.html#applications
-
-
         segm = ants.atropos(
             a=self._input,
             i='Kmeans[3]',
