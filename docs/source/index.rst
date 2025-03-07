@@ -5,7 +5,7 @@
     <div class="landing-page">
       <div class="landing-header">
         <img src="_static/images/logo.png" alt="Micaflow Logo" class="landing-logo" />
-        <h1>Micaflow 2.0</h1>
+        <h1>Micaflow</h1>
         <p class="lead">
           A comprehensive neuroimaging processing pipeline for structural and diffusion MRI analysis
         </p>
@@ -24,7 +24,7 @@
 Overview
 ========
 
-Micaflow2.0 is a modular neuroimaging pipeline designed for processing structural and diffusion MRI data. Built on Snakemake workflow management system, it provides reproducible and scalable neuroimaging analyses with robust preprocessing, registration, and feature extraction capabilities.
+Micaflow is a modular neuroimaging pipeline designed for processing structural and diffusion MRI data. Built on Snakemake workflow management system, it provides reproducible and scalable neuroimaging analyses with robust preprocessing, registration, and feature extraction capabilities.
 
 .. raw:: html
 

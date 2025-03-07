@@ -8,7 +8,7 @@ autodoc_default_options = {
     'imported-members': False,
 }
 # Project information
-project = 'Micaflow2.0'
+project = 'Micaflow'
 copyright = '2025, MICA Lab'
 author = 'MICA Lab'
 
