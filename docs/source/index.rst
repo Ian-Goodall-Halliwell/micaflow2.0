@@ -102,7 +102,7 @@ Documentation
    :maxdepth: 2
    :caption: Contents:
    
-   scripts/index
+   scripts
 
 Indices and tables
 ==================

@@ -6,9 +6,10 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to micaflow’s documentation! &mdash; Project name not set  documentation</title>
+  <title>Overview &mdash; Micaflow2.0  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=ad67a238" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -26,12 +27,13 @@
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+        <div class="wy-side-nav-search"  style="background: #343131" >
 
           
           
-          <a href="#" class="icon icon-home">
-            Project name not set
+          <a href="#">
+            
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -50,9 +52,9 @@
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Project name not set</a>
+          <a href="#">Micaflow2.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -60,7 +62,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to micaflow’s documentation!</li>
+      <li class="breadcrumb-item active">Overview</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -70,13 +72,96 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-micaflow-s-documentation">
-<h1>Welcome to micaflow’s documentation!<a class="headerlink" href="#welcome-to-micaflow-s-documentation" title="Link to this heading"></a></h1>
+  <div class="landing-page">
+  <div class="landing-header">
+    <img src="_static/images/logo.png" alt="Micaflow Logo" class="landing-logo" />
+    <h1>Micaflow 2.0</h1>
+    <p class="lead">
+      A comprehensive neuroimaging processing pipeline for structural and diffusion MRI analysis
+    </p>
+
+    <div class="landing-buttons">
+      <a href="https://github.com/ian-goodall-halliwell/micaflow2.0" class="landing-button">
+        GitHub Repository
+      </a>
+      <a href="scripts/index.html" class="landing-button">
+        API Documentation
+      </a>
+    </div>
+  </div>
+</div><section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
+<p>Micaflow2.0 is a modular neuroimaging pipeline designed for processing structural and diffusion MRI data. Built on Snakemake workflow management system, it provides reproducible and scalable neuroimaging analyses with robust preprocessing, registration, and feature extraction capabilities.</p>
+<div class="feature-grid">
+  <div class="feature-card">
+    <h3>Structural MRI Processing</h3>
+    <ul>
+      <li>Brain extraction (HD-BET)</li>
+      <li>N4 bias field correction</li>
+      <li>SynthSeg segmentation</li>
+      <li>MNI space registration</li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h3>Diffusion MRI Processing</h3>
+    <ul>
+      <li>Motion correction</li>
+      <li>Denoising with Patch2Self</li>
+      <li>FA/MD map calculation</li>
+      <li>Distortion correction (HYSCO)</li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h3>Analysis Tools</h3>
+    <ul>
+      <li>Texture feature extraction</li>
+      <li>Registration quality metrics</li>
+      <li>ANTs-based transformations</li>
+      <li>Automated workflow with Snakemake</li>
+    </ul>
+  </div>
+</div></section>
+<section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone the repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ian-goodall-halliwell/micaflow2.0.git
+<span class="nb">cd</span><span class="w"> </span>micaflow2.0
+
+<span class="c1"># Create and activate a conda environment</span>
+conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+conda<span class="w"> </span>activate<span class="w"> </span>micaflow
+
+<span class="c1"># Install additional dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</section>
+<section id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Edit the config.yaml file to set your input and output directories</span>
+<span class="c1"># Run the pipeline</span>
+snakemake<span class="w"> </span>--cores<span class="w"> </span><span class="m">4</span>
+
+<span class="c1"># Processing a single subject</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SUBJECT</span><span class="o">=</span>sub-01
+<span class="nb">export</span><span class="w"> </span><span class="nv">SESSION</span><span class="o">=</span>ses-01
+<span class="nb">export</span><span class="w"> </span><span class="nv">DATA_DIRECTORY</span><span class="o">=</span>/path/to/data
+<span class="nb">export</span><span class="w"> </span><span class="nv">OUT_DIR</span><span class="o">=</span>/path/to/output
+snakemake<span class="w"> </span>--cores<span class="w"> </span><span class="m">4</span><span class="w"> </span>-C<span class="w"> </span><span class="nv">subject</span><span class="o">=</span><span class="nv">$SUBJECT</span><span class="w"> </span><span class="nv">session</span><span class="o">=</span><span class="nv">$SESSION</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="documentation">
+<h1>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="scripts/index.html">Scripts Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scripts/_autosummary/scripts.html">scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts/index.html">Scripts Reference</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -101,7 +186,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright .</p>
+    <p>&#169; Copyright 2025, MICA Lab.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
