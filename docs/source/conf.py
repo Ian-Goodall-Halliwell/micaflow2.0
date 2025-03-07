@@ -7,7 +7,27 @@ autodoc_default_options = {
     'show-inheritance': True,
     'imported-members': False,
 }
+# Project information
+project = 'Micaflow2.0'
+copyright = '2025, MICA Lab'
+author = 'MICA Lab'
 
+# Theme options
+html_theme = 'sphinx_rtd_theme'
+html_theme_options = {
+    'logo_only': True,
+    'display_version': True,
+    'style_nav_header_background': '#343131',
+}
+
+# Logo setup
+html_logo = '_static/images/logo.png'  # Add your logo here
+
+# Static files
+html_static_path = ['_static']
+html_css_files = [
+    'css/custom.css',
+]
 # Add the scripts directory to path so Sphinx can find them
 import os
 import sys
