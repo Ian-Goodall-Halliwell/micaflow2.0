@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>micaflow2.0 - Neuroimaging Processing Pipeline</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding-top: 60px;
+        }
+        .header-bg {
+            background-color: #f8f9fa;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        pre.code-block {
+            background-color: #f5f5f5;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #0275d8;
+        }
+        footer {
+            margin-top: 3rem;
+            padding: 2rem 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">micaflow2.0</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#installation">Installation</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#usage">Usage</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#documentation">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="header-bg">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-4">micaflow2.0</h1>
+                    <p class="lead">A comprehensive neuroimaging processing pipeline for structural and diffusion MRI analysis</p>
+                    <a href="https://github.com/mica/micaflow2.0" class="btn btn-primary">View on GitHub</a>
+                </div>
+                <div class="col-md-4 text-center">
+                    <img src="https://placehold.co/200x200?text=Brain" alt="Brain illustration" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="overview" class="mb-5">
+            <h2>Overview</h2>
+            <p>
+                micaflow2.0 is a modular neuroimaging pipeline designed for processing structural and diffusion MRI data. 
+                Built on Snakemake workflow management system, it provides reproducible and scalable neuroimaging analyses 
+                with robust preprocessing, registration, and feature extraction capabilities.
+            </p>
+        </section>
+
+        <section id="features" class="mb-5">
+            <h2>Features</h2>
+            <div class="row mt-4">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Structural MRI Processing</h5>
+                            <ul>
+                                <li>Brain extraction (HD-BET)</li>
+                                <li>N4 bias field correction</li>
+                                <li>SynthSeg segmentation</li>
+                                <li>MNI space registration</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Diffusion MRI Processing</h5>
+                            <ul>
+                                <li>Motion correction</li>
+                                <li>Denoising with Patch2Self</li>
+                                <li>FA/MD map calculation</li>
+                                <li>Distortion correction (HYSCO)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Analysis Tools</h5>
+                            <ul>
+                                <li>Texture feature extraction</li>
+                                <li>Registration quality metrics</li>
+                                <li>ANTs-based transformations</li>
+                                <li>Automated workflow with Snakemake</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="installation" class="mb-5">
+            <h2>Installation</h2>
+            <p>To install micaflow2.0, you need to clone the repository and set up the environment:</p>
+            <pre class="code-block">
+# Clone the repository
+git clone https://github.com/ian-goodall-halliwell/micaflow2.0.git
+cd micaflow2.0
+
+# Create and activate a conda environment
+conda env create -f environment.yml
+conda activate micaflow
+
+# Install additional dependencies
+pip install -r requirements.txt</pre>
+        </section>
+
+        <section id="usage" class="mb-5">
+            <h2>Usage</h2>
+            <p>micaflow2.0 uses Snakemake to manage the workflow. You can run the entire pipeline with:</p>
+            <pre class="code-block">
+# Edit the config.yaml file to set your input and output directories
+
+# Run the pipeline
+snakemake --cores 4</pre>
+            
+            <h3 class="mt-4">Example: Processing a single subject</h3>
+            <pre class="code-block">
+# Set environment variables
+export SUBJECT=sub-01
+export SESSION=ses-01
+export DATA_DIRECTORY=/path/to/data
+export OUT_DIR=/path/to/output
+
+# Run the pipeline for a specific subject
+snakemake --cores 4 -C subject=$SUBJECT session=$SESSION</pre>
+        </section>
+
+        <section id="documentation" class="mb-5">
+            <h2>Documentation</h2>
+            <p>The pipeline contains several key components:</p>
+            
+            <h4 class="mt-4">Structural Processing</h4>
+            <p>Brain extraction is performed using HD-BET, followed by N4 bias field correction:</p>
+            <pre class="code-block">
+python scripts/hdbet.py --input input_image.nii.gz --output brain.nii.gz
+python scripts/N4BiasFieldCorrection.py -i brain.nii.gz -o corrected_brain.nii.gz</pre>
+            
+            <h4 class="mt-4">Diffusion Processing</h4>
+            <p>The diffusion pipeline includes denoising, motion correction, and calculation of diffusion metrics:</p>
+            <pre class="code-block">
+python scripts/dwi_denoise.py --moving dwi.nii.gz --bval dwi.bval --bvec dwi.bvec --output denoised_dwi.nii.gz
+python scripts/dwi_motioncorrection.py --denoised denoised_dwi.nii.gz --bval dwi.bval --bvec dwi.bvec --output corrected_dwi.nii.gz
+python scripts/dwi_compute_fa_md.py --bias_corr corrected_dwi.nii.gz --mask brain_mask.nii.gz --bval dwi.bval --bvec dwi.bvec --fa fa_map.nii.gz --md md_map.nii.gz</pre>
+            
+            <h4 class="mt-4">Registration</h4>
+            <p>ANTs-based registration can be used for spatial normalization:</p>
+            <pre class="code-block">
+python scripts/coregister.py --fixed-file atlas.nii.gz --moving-file subject_brain.nii.gz --out-file registered.nii.gz --warp-file warp.nii.gz --affine-file affine.mat</pre>
+            
+            <h4 class="mt-4">Texture Analysis</h4>
+            <p>Extract texture features from brain images:</p>
+            <pre class="code-block">
+python scripts/runtexture.py -i brain.nii.gz -m brain_mask.nii.gz -o /output/textures/</pre>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>micaflow2.0</h4>
+                    <p>A neuroimaging processing pipeline from the MICA Lab.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p><a href="https://github.com/ian-goodall-halliwell/micaflow2.0">GitHub Repository</a></p>
+                    <p><small>© 2025 MICA Lab. All rights reserved.</small></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
