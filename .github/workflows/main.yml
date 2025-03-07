@@ -26,7 +26,7 @@ jobs:
           pip install sphinx sphinx-rtd-theme
           
           # Install project dependencies (add your project dependencies here)
-          pip install ants nibabel numpy torch scikit-learn
+          pip install -r requirements_39.txt
 
       - name: Build documentation
         run: |
