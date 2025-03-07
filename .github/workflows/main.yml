@@ -6,7 +6,7 @@ on:
     paths:
       - 'scripts/**'
       - 'docs/**'
-      - '.github/workflows/sphinx.yml'
+      - '.github/workflows/main.yml'
 
 jobs:
   build:
