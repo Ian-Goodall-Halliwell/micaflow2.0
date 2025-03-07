@@ -1,5 +1,5 @@
 # Add these settings to enable autodoc for all scripts
-autosummary_generate = True  # Generate stub pages for all modules
+
 add_module_names = False     # Remove module names from generated docs
 autodoc_default_options = {
     'members': True,
@@ -39,7 +39,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
 ]
-
+autosummary_generate = True  # Generate stub pages for all modules
 # For NumPy/Google style docstrings
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
