@@ -1,7 +1,18 @@
+# Add these settings to enable autodoc for all scripts
+autosummary_generate = True  # Generate stub pages for all modules
+add_module_names = False     # Remove module names from generated docs
+autodoc_default_options = {
+    'members': True,
+    'undoc-members': False,
+    'show-inheritance': True,
+    'imported-members': False,
+}
+
+# Add the scripts directory to path so Sphinx can find them
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))  # Add the project root directory
-
+sys.path.insert(0, os.path.abspath('../..'))  # Root directory
+sys.path.insert(0, os.path.abspath('../../scripts'))  # Scripts directory
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
