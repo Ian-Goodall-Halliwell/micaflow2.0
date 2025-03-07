@@ -32,6 +32,7 @@ jobs:
         run: |
           cd docs
           make html
+          touch build/html/.nojekyll  # Add this line
           
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
