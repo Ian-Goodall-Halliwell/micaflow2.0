@@ -1,0 +1,6 @@
+﻿scripts.N4BiasFieldCorrection
+=============================
+
+.. currentmodule:: scripts
+
+.. automodule:: N4BiasFieldCorrection

@@ -1,0 +1,6 @@
+﻿scripts.dwi\_reg
+================
+
+.. currentmodule:: scripts
+
+.. automodule:: dwi_reg

@@ -1,0 +1,6 @@
+﻿scripts.dwi\_compute\_fa\_md
+============================
+
+.. currentmodule:: scripts
+
+.. automodule:: dwi_compute_fa_md

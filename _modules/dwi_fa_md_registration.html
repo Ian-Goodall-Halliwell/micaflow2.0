@@ -1,0 +1,196 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dwi_fa_md_registration &mdash; Micaflow  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ad67a238" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">Scripts API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Micaflow</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">dwi_fa_md_registration</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for dwi_fa_md_registration</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dipy.align.imaffine</span><span class="w"> </span><span class="kn">import</span> <span class="n">AffineMap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dipy.align.imwarp</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiffeomorphicMap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">nibabel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ants</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<div class="viewcode-block" id="apply_registration_to_fa_md">
+<a class="viewcode-back" href="../_autosummary/scripts.dwi_fa_md_registration.html#dwi_fa_md_registration.apply_registration_to_fa_md">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_registration_to_fa_md</span><span class="p">(</span><span class="n">fa_path</span><span class="p">,</span> <span class="n">md_path</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">reg_affine</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">md_out_path</span><span class="p">,</span> <span class="n">fa_out_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register FA and MD maps to a reference atlas using provided transformations.</span>
+<span class="sd">    </span>
+<span class="sd">    This function applies both affine and nonlinear transformations to fractional anisotropy </span>
+<span class="sd">    (FA) and mean diffusivity (MD) maps to register them to a reference atlas space (typically MNI).</span>
+<span class="sd">    The registration is performed in two steps: first an affine transformation, followed by</span>
+<span class="sd">    a nonlinear warp. Intermediate results are stored in a temporary directory that is</span>
+<span class="sd">    automatically cleaned up when processing is complete.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        fa_path (str): Path to the input FA map NIfTI file.</span>
+<span class="sd">        md_path (str): Path to the input MD map NIfTI file.</span>
+<span class="sd">        atlas (str): Path to the reference atlas NIfTI file (e.g., MNI template).</span>
+<span class="sd">        reg_affine (str): Path to the affine transformation file (ANTs .mat format).</span>
+<span class="sd">        mapping (str): Path to the nonlinear warp field (ANTs format).</span>
+<span class="sd">        md_out_path (str): Output path where the registered MD map will be saved.</span>
+<span class="sd">        fa_out_path (str): Output path where the registered FA map will be saved.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None: The function saves the registered images to the specified output paths</span>
+<span class="sd">        and prints a confirmation message but does not return any values.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes:</span>
+<span class="sd">        This function requires ANTsPy for image loading, transformation, and writing.</span>
+<span class="sd">        The temporary files are automatically removed even if an exception occurs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create a temporary directory</span>
+    <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Load the images</span>
+        <span class="n">MNI_atlas</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">image_read</span><span class="p">(</span><span class="n">atlas</span><span class="p">)</span>
+        <span class="n">fa_map</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">image_read</span><span class="p">(</span><span class="n">fa_path</span><span class="p">)</span>
+        <span class="n">md_map</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">image_read</span><span class="p">(</span><span class="n">md_path</span><span class="p">)</span>
+        
+        <span class="c1"># Apply the affine transformation</span>
+        <span class="n">fa_affine_trans</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">apply_transforms</span><span class="p">(</span><span class="n">fixed</span><span class="o">=</span><span class="n">MNI_atlas</span><span class="p">,</span> <span class="n">moving</span><span class="o">=</span><span class="n">fa_map</span><span class="p">,</span> <span class="n">transformlist</span><span class="o">=</span><span class="p">[</span><span class="n">reg_affine</span><span class="p">])</span>
+        <span class="n">md_affine_trans</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">apply_transforms</span><span class="p">(</span><span class="n">fixed</span><span class="o">=</span><span class="n">MNI_atlas</span><span class="p">,</span> <span class="n">moving</span><span class="o">=</span><span class="n">md_map</span><span class="p">,</span> <span class="n">transformlist</span><span class="o">=</span><span class="p">[</span><span class="n">reg_affine</span><span class="p">])</span>
+        
+        <span class="c1"># Save the affine transformed images to the temp directory</span>
+        <span class="n">fa_affine_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">temp_dir</span><span class="si">}</span><span class="s2">/fa_MNI_aff.nii.gz&quot;</span>
+        <span class="n">md_affine_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">temp_dir</span><span class="si">}</span><span class="s2">/md_MNI_aff.nii.gz&quot;</span>
+        <span class="n">ants</span><span class="o">.</span><span class="n">image_write</span><span class="p">(</span><span class="n">fa_affine_trans</span><span class="p">,</span> <span class="n">fa_affine_path</span><span class="p">)</span>
+        <span class="n">ants</span><span class="o">.</span><span class="n">image_write</span><span class="p">(</span><span class="n">md_affine_trans</span><span class="p">,</span> <span class="n">md_affine_path</span><span class="p">)</span>
+        
+        <span class="c1"># Apply the nonlinear warp using the provided forward field</span>
+        <span class="n">fa_nonlinear</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">apply_transforms</span><span class="p">(</span><span class="n">fixed</span><span class="o">=</span><span class="n">MNI_atlas</span><span class="p">,</span> <span class="n">moving</span><span class="o">=</span><span class="n">fa_affine_trans</span><span class="p">,</span> <span class="n">transformlist</span><span class="o">=</span><span class="p">[</span><span class="n">mapping</span><span class="p">])</span>
+        <span class="n">md_nonlinear</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">apply_transforms</span><span class="p">(</span><span class="n">fixed</span><span class="o">=</span><span class="n">MNI_atlas</span><span class="p">,</span> <span class="n">moving</span><span class="o">=</span><span class="n">md_affine_trans</span><span class="p">,</span> <span class="n">transformlist</span><span class="o">=</span><span class="p">[</span><span class="n">mapping</span><span class="p">])</span>
+        
+        <span class="c1"># Save the final registered images</span>
+        <span class="n">ants</span><span class="o">.</span><span class="n">image_write</span><span class="p">(</span><span class="n">fa_nonlinear</span><span class="p">,</span> <span class="n">fa_out_path</span><span class="p">)</span>
+        <span class="n">ants</span><span class="o">.</span><span class="n">image_write</span><span class="p">(</span><span class="n">md_nonlinear</span><span class="p">,</span> <span class="n">md_out_path</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FA and MD maps registered and saved as fa_MNI.nii.gz and md_MNI.nii.gz.&quot;</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># Remove the temporary directory and its contents</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Apply registration to FA/MD maps using affine and nonlinear warps.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--fa&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the FA map (NIfTI file).&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--md&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the MD map (NIfTI file).&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--atlas&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the atlas image (NIfTI file).&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--reg_affine&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the registration affine matrix file (ANTs .mat file).&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--mapping&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to the nonlinear mapping (ANTs warp field).&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--out_fa&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output path for the registered FA maps.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--out_md&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output path for the registered MD maps.&quot;</span><span class="p">)</span>
+    
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    
+    <span class="n">apply_registration_to_fa_md</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">fa</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">md</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_affine</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out_md</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">out_fa</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, MICA Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

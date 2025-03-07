@@ -1,0 +1,6 @@
+﻿scripts.dwi\_denoise
+====================
+
+.. currentmodule:: scripts
+
+.. automodule:: dwi_denoise

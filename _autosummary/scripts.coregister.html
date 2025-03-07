@@ -1,0 +1,163 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>scripts.coregister &mdash; Micaflow  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=ad67a238" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="scripts.dwi_compute_fa_md" href="scripts.dwi_compute_fa_md.html" />
+    <link rel="prev" title="scripts.N4BiasFieldCorrection" href="scripts.N4BiasFieldCorrection.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../scripts.html">Scripts API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="scripts.N4BiasFieldCorrection.html">scripts.N4BiasFieldCorrection</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">scripts.coregister</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#coregister.ants_linear_nonlinear_registration"><code class="docutils literal notranslate"><span class="pre">ants_linear_nonlinear_registration()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.dwi_compute_fa_md.html">scripts.dwi_compute_fa_md</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.dwi_denoise.html">scripts.dwi_denoise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.dwi_fa_md_registration.html">scripts.dwi_fa_md_registration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.dwi_motioncorrection.html">scripts.dwi_motioncorrection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.dwi_reg.html">scripts.dwi_reg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.hdbet.html">scripts.hdbet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.pyhysco.html">scripts.pyhysco</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.runtexture.html">scripts.runtexture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts.use_warp.html">scripts.use_warp</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Micaflow</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../scripts.html">Scripts API Reference</a></li>
+      <li class="breadcrumb-item active">scripts.coregister</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/scripts.coregister.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-coregister">
+<span id="scripts-coregister"></span><h1>scripts.coregister<a class="headerlink" href="#module-coregister" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="coregister.ants_linear_nonlinear_registration">
+<span class="sig-name descname"><span class="pre">ants_linear_nonlinear_registration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fixed_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'registered_image.nii'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warp_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rev_warp_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rev_affine_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/coregister.html#ants_linear_nonlinear_registration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#coregister.ants_linear_nonlinear_registration" title="Link to this definition"></a></dt>
+<dd><p>Perform linear (rigid + affine) and nonlinear registration using ANTsPy.</p>
+<p>This function performs registration between two images using ANTs’ SyNRA transform,
+which includes both linear (rigid + affine) and nonlinear (SyN) components.
+The registered image is saved to the specified output path, and the transform
+files can optionally be saved as well.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fixed_file</strong> (<em>str</em>) – Path to the fixed/reference image.</p></li>
+<li><p><strong>moving_file</strong> (<em>str</em>) – Path to the moving image that will be registered.</p></li>
+<li><p><strong>out_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path where the registered image will be saved.
+Defaults to “registered_image.nii”.</p></li>
+<li><p><strong>warp_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save the forward warp field.
+Defaults to None.</p></li>
+<li><p><strong>affine_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save the forward affine transform.
+Defaults to None.</p></li>
+<li><p><strong>rev_warp_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save the reverse warp field.
+Defaults to None.</p></li>
+<li><p><strong>rev_affine_file</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save the reverse affine transform.
+Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The function saves the registered image and transform files to disk
+but does not return any values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="scripts.N4BiasFieldCorrection.html" class="btn btn-neutral float-left" title="scripts.N4BiasFieldCorrection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="scripts.dwi_compute_fa_md.html" class="btn btn-neutral float-right" title="scripts.dwi_compute_fa_md" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, MICA Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

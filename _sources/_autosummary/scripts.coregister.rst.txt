@@ -1,0 +1,6 @@
+﻿scripts.coregister
+==================
+
+.. currentmodule:: scripts
+
+.. automodule:: coregister

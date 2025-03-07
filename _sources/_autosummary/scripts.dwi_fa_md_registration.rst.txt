@@ -1,0 +1,6 @@
+﻿scripts.dwi\_fa\_md\_registration
+=================================
+
+.. currentmodule:: scripts
+
+.. automodule:: dwi_fa_md_registration

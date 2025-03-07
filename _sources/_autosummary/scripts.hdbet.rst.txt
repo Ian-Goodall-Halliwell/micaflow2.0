@@ -1,0 +1,6 @@
+﻿scripts.hdbet
+=============
+
+.. currentmodule:: scripts
+
+.. automodule:: hdbet

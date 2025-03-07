@@ -1,0 +1,6 @@
+﻿scripts.dwi\_motioncorrection
+=============================
+
+.. currentmodule:: scripts
+
+.. automodule:: dwi_motioncorrection
