@@ -1,4 +1,0 @@
-Building DAG of jobs...
-WildcardError in rule dwi_fa_md_registration in file /home/ian/GitHub/micaflow2.0/Snakefile, line 369:
-Wildcards in input files cannot be determined from output files:
-'modality'

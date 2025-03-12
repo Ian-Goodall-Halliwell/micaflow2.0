@@ -1,9 +1,0 @@
-# Default configuration for micaflow pipeline
-subject: "sub-HC131"  # Subject ID (e.g., sub-01, sub-02, etc.)
-session: "ses-01"   # Session ID (e.g., ses-01, ses-02, etc.)
-out_dir: "outputs"  # Output directory where results will be stored
-threads: 4         # Number of CPU threads to use
-data_directory: "/home/ian/GitHub/data"  # Path to your BIDS-compatible data directory
-run_dwi: true       # Whether to run DWI processing
-cleanup: true       # Whether to clean up work directory 
-cpu: true

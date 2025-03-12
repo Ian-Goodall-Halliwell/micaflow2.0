@@ -1,8 +1,0 @@
-Building DAG of jobs...
-MissingInputException in rule dwi_topup in file /home/ian/GitHub/micaflow2.0/Snakefile, line 248:
-Missing input files for rule dwi_topup:
-    output: outputs/sub-HC131/ses-01/xfm/topup-warp-EstFieldMap.nii.gz, outputs/sub-HC131/ses-01/xfm/corrected_image.nii.gz
-    affected files:
-        /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_PA.nii.gz
-        /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_PA.bvec
-        /home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_PA.bval
