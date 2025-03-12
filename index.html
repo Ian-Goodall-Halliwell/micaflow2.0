@@ -1,0 +1,210 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview &mdash; Micaflow  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=ad67a238" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Scripts API Reference" href="scripts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="#">
+            
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">Scripts API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Micaflow</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="landing-page">
+  <div class="landing-header">
+    <img src="_static/images/logo.png" alt="Micaflow Logo" class="landing-logo" />
+    <h1>Micaflow</h1>
+    <p class="lead">
+      A comprehensive neuroimaging processing pipeline for structural and diffusion MRI analysis
+    </p>
+
+    <div class="landing-buttons">
+      <a href="https://github.com/ian-goodall-halliwell/micaflow2.0" class="landing-button">
+        GitHub Repository
+      </a>
+      <a href="scripts/index.html" class="landing-button">
+        API Documentation
+      </a>
+    </div>
+  </div>
+</div><section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
+<p>Micaflow is a modular neuroimaging pipeline designed for processing structural and diffusion MRI data. Built on Snakemake workflow management system, it provides reproducible and scalable neuroimaging analyses with robust preprocessing, registration, and feature extraction capabilities.</p>
+<div class="feature-grid">
+  <div class="feature-card">
+    <h3>Structural MRI Processing</h3>
+    <ul>
+      <li>Brain extraction (HD-BET)</li>
+      <li>N4 bias field correction</li>
+      <li>SynthSeg segmentation</li>
+      <li>MNI space registration</li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h3>Diffusion MRI Processing</h3>
+    <ul>
+      <li>Motion correction</li>
+      <li>Denoising with Patch2Self</li>
+      <li>FA/MD map calculation</li>
+      <li>Distortion correction (HYSCO)</li>
+    </ul>
+  </div>
+
+  <div class="feature-card">
+    <h3>Analysis Tools</h3>
+    <ul>
+      <li>Texture feature extraction</li>
+      <li>Registration quality metrics</li>
+      <li>ANTs-based transformations</li>
+      <li>Automated workflow with Snakemake</li>
+    </ul>
+  </div>
+</div></section>
+<section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone the repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ian-goodall-halliwell/micaflow2.0.git
+<span class="nb">cd</span><span class="w"> </span>micaflow2.0
+
+<span class="c1"># Create and activate a conda environment</span>
+conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yml
+conda<span class="w"> </span>activate<span class="w"> </span>micaflow
+
+<span class="c1"># Install additional dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</section>
+<section id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Edit the config.yaml file to set your input and output directories</span>
+<span class="c1"># Run the pipeline</span>
+snakemake<span class="w"> </span>--cores<span class="w"> </span><span class="m">4</span>
+
+<span class="c1"># Processing a single subject</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">SUBJECT</span><span class="o">=</span>sub-01
+<span class="nb">export</span><span class="w"> </span><span class="nv">SESSION</span><span class="o">=</span>ses-01
+<span class="nb">export</span><span class="w"> </span><span class="nv">DATA_DIRECTORY</span><span class="o">=</span>/path/to/data
+<span class="nb">export</span><span class="w"> </span><span class="nv">OUT_DIR</span><span class="o">=</span>/path/to/output
+snakemake<span class="w"> </span>--cores<span class="w"> </span><span class="m">4</span><span class="w"> </span>-C<span class="w"> </span><span class="nv">subject</span><span class="o">=</span><span class="nv">$SUBJECT</span><span class="w"> </span><span class="nv">session</span><span class="o">=</span><span class="nv">$SESSION</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="documentation">
+<h1>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">Scripts API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="_autosummary/scripts.pyhysco.html">scripts.pyhysco</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="scripts.html" class="btn btn-neutral float-right" title="Scripts API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, MICA Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

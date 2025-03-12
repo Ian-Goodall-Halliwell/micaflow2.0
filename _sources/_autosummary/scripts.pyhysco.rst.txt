@@ -1,0 +1,6 @@
+﻿scripts.pyhysco
+===============
+
+.. currentmodule:: scripts
+
+.. automodule:: pyhysco
