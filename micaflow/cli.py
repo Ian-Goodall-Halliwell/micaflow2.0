@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import argparse
-import os
 import sys
 import pkg_resources
 import subprocess
-import shutil
+from colorama import init, Fore, Style
+
+init()
 
 def get_snakefile_path():
     """Get the path to the Snakefile within the installed package."""
@@ -13,13 +14,13 @@ def get_snakefile_path():
 def print_extended_help():
     """Print an extended help message with examples."""
     # ANSI color codes
-    CYAN = "\033[36m"
-    GREEN = "\033[32m"
-    YELLOW = "\033[33m"
-    BLUE = "\033[34m"
-    MAGENTA = "\033[35m"
-    BOLD = "\033[1m"
-    RESET = "\033[0m"
+    CYAN = Fore.CYAN
+    GREEN = Fore.GREEN
+    YELLOW = Fore.YELLOW
+    BLUE = Fore.BLUE
+    MAGENTA = Fore.MAGENTA
+    BOLD = Style.BRIGHT
+    RESET = Style.RESET_ALL
     
     help_msg = f"""
     {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗

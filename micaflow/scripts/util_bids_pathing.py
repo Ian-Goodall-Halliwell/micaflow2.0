@@ -3,12 +3,18 @@ import os
 import sys
 import torch
 import tensorflow as tf
+from colorama import init, Fore, Style
+
+init()
 
 # ANSI color codes for terminal output
-GREEN = '\033[92m'
-YELLOW = '\033[93m'
-RED = '\033[91m'
-RESET = '\033[0m'
+CYAN = Fore.CYAN
+GREEN = Fore.GREEN
+YELLOW = Fore.YELLOW
+BLUE = Fore.BLUE
+MAGENTA = Fore.MAGENTA
+BOLD = Style.BRIGHT
+RESET = Style.RESET_ALL
 
 def print_note(message, message2=None):
     """Print a note message in green."""

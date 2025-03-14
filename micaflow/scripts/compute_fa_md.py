@@ -3,15 +3,20 @@ import sys
 from dipy.reconst.dti import TensorModel
 from dipy.core.gradients import gradient_table
 import nibabel as nib
+from colorama import init, Fore, Style
+
+init()
 
 def print_help_message():
     """Print a help message with formatted text."""
     # ANSI color codes
-    CYAN = "\033[36m"
-    GREEN = "\033[32m"
-    YELLOW = "\033[33m"
-    BOLD = "\033[1m"
-    RESET = "\033[0m"
+    CYAN = Fore.CYAN
+    GREEN = Fore.GREEN
+    YELLOW = Fore.YELLOW
+    BLUE = Fore.BLUE
+    MAGENTA = Fore.MAGENTA
+    BOLD = Style.BRIGHT
+    RESET = Style.RESET_ALL
     
     help_text = f"""
     {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
