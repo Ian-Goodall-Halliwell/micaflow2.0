@@ -5,32 +5,43 @@ from dipy.core.gradients import gradient_table
 import nibabel as nib
 
 def print_help_message():
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    """Print a help message with formatted text."""
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║                DIFFUSION TENSOR METRICS (FA/MD)                ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script computes Fractional Anisotropy (FA) and Mean Diffusivity (MD)
     maps from diffusion-weighted images using the diffusion tensor model.
     
-    REQUIRED ARGUMENTS:
-      --input      : Path to the input DWI image (.nii.gz)
-      --mask       : Path to the brain mask image (.nii.gz)
-      --bval       : Path to the b-values file (.bval)
-      --bvec       : Path to the b-vectors file (.bvec)
-      --output-fa  : Output path for the FA map (.nii.gz)
-      --output-md  : Output path for the MD map (.nii.gz)
+    {CYAN}{BOLD}────────────────────────── USAGE ──────────────────────────{RESET}
+      micaflow compute_fa_md {GREEN}[options]{RESET}
     
-    EXAMPLE USAGE:
+    {CYAN}{BOLD}─────────────────── REQUIRED ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--input{RESET}      : Path to the input DWI image (.nii.gz)
+      {YELLOW}--mask{RESET}       : Path to the brain mask image (.nii.gz)
+      {YELLOW}--bval{RESET}       : Path to the b-values file (.bval)
+      {YELLOW}--bvec{RESET}       : Path to the b-vectors file (.bvec)
+      {YELLOW}--output-fa{RESET}  : Output path for the FA map (.nii.gz)
+      {YELLOW}--output-md{RESET}  : Output path for the MD map (.nii.gz)
+    
+    {CYAN}{BOLD}──────────────────── EXAMPLE USAGE ──────────────────────{RESET}
       micaflow compute_fa_md \\
-        --input corrected_dwi.nii.gz \\
-        --mask brain_mask.nii.gz \\
-        --bval dwi.bval \\
-        --bvec dwi.bvec \\
-        --output-fa fa.nii.gz \\
-        --output-md md.nii.gz
+        {YELLOW}--input{RESET} corrected_dwi.nii.gz \\
+        {YELLOW}--mask{RESET} brain_mask.nii.gz \\
+        {YELLOW}--bval{RESET} dwi.bval \\
+        {YELLOW}--bvec{RESET} dwi.bvec \\
+        {YELLOW}--output-fa{RESET} fa.nii.gz \\
+        {YELLOW}--output-md{RESET} md.nii.gz
     
-    NOTES:
+    {CYAN}{BOLD}────────────────────────── NOTES ─────────────────────────{RESET}
     - FA (Fractional Anisotropy) values range from 0 (isotropic) to 1 (anisotropic)
     - MD (Mean Diffusivity) measures the overall magnitude of diffusion
     - Processing requires a brain mask to exclude non-brain regions

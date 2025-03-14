@@ -6,38 +6,47 @@ from tqdm import tqdm
 
 
 def print_help_message():
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    """Print a help message with formatted text."""
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║                     MOTION CORRECTION                          ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script corrects for subject motion in diffusion-weighted images (DWI)
     by registering each volume to the first volume (typically a B0 image).
     It uses ANTs SyNRA registration which combines rigid, affine, and
     deformable transformations.
     
-    REQUIRED ARGUMENTS:
-      --denoised   : Path to the input denoised DWI image (.nii.gz)
-      --bval       : Path to the b-values file (.bval)
-      --bvec       : Path to the b-vectors file (.bvec)
-      --output     : Output path for the motion-corrected image (.nii.gz)
+    {CYAN}{BOLD}────────────────────────── USAGE ──────────────────────────{RESET}
+      micaflow motion_correction {GREEN}[options]{RESET}
     
-    EXAMPLE USAGE:
+    {CYAN}{BOLD}─────────────────── REQUIRED ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--denoised{RESET}   : Path to the input denoised DWI image (.nii.gz)
+      {YELLOW}--bval{RESET}       : Path to the b-values file (.bval)
+      {YELLOW}--bvec{RESET}       : Path to the b-vectors file (.bvec)
+      {YELLOW}--output{RESET}     : Output path for the motion-corrected image (.nii.gz)
+    
+    {CYAN}{BOLD}─────────────────── EXAMPLE USAGE ───────────────────{RESET}
       micaflow motion_correction \\
-        --denoised denoised_dwi.nii.gz \\
-        --bval dwi.bval \\
-        --bvec dwi.bvec \\
-        --output motion_corrected_dwi.nii.gz
+        {YELLOW}--denoised{RESET} denoised_dwi.nii.gz \\
+        {YELLOW}--bval{RESET} dwi.bval \\
+        {YELLOW}--bvec{RESET} dwi.bvec \\
+        {YELLOW}--output{RESET} motion_corrected_dwi.nii.gz
     
-    NOTES:
+    {CYAN}{BOLD}────────────────────────── NOTES ─────────────────────────{RESET}
     - The first volume is assumed to be a B0 image and used as the reference
     - Each subsequent volume is registered to this reference
     - The process can take significant time depending on volume count
     - Progress is displayed using a progress bar
-    
     """
     print(help_text)
-
 
 def run_motion_correction(dwi_path, bval_path, bvec_path, output):
     """Perform motion correction on diffusion-weighted images (DWI).

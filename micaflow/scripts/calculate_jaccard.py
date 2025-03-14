@@ -5,45 +5,54 @@ import numpy as np
 import sys
 
 def print_help_message():
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    """Print a help message with formatted text."""
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║                    JACCARD INDEX CALCULATOR                    ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script calculates the Jaccard similarity index (intersection over union)
     between two segmentation volumes, either globally or for each ROI.
     
-    REQUIRED ARGUMENTS:
-      --input, -i     : Path to the first input segmentation volume (.nii.gz)
-      --reference, -r : Path to the reference segmentation volume (.nii.gz)
-      --output, -o    : Output path for the CSV file with Jaccard indices
+    {CYAN}{BOLD}────────────────────────── USAGE ──────────────────────────{RESET}
+      micaflow calculate_jaccard {GREEN}[options]{RESET}
     
-    OPTIONAL ARGUMENTS:
-      --mask, -m      : Optional mask to restrict comparison to a specific region
-      --threshold, -t : Threshold value for probabilistic segmentations (default: 0.5)
+    {CYAN}{BOLD}─────────────────── REQUIRED ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--input{RESET}, {YELLOW}-i{RESET}     : Path to the first input segmentation volume (.nii.gz)
+      {YELLOW}--reference{RESET}, {YELLOW}-r{RESET} : Path to the reference segmentation volume (.nii.gz)
+      {YELLOW}--output{RESET}, {YELLOW}-o{RESET}    : Output path for the CSV file with Jaccard indices
     
-    EXAMPLE USAGE:
+    {CYAN}{BOLD}─────────────────── OPTIONAL ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--mask{RESET}, {YELLOW}-m{RESET}      : Optional mask to restrict comparison to a specific region
+      {YELLOW}--threshold{RESET}, {YELLOW}-t{RESET} : Threshold value for probabilistic segmentations (default: 0.5)
+    
+    {CYAN}{BOLD}──────────────────── EXAMPLE USAGE ──────────────────────{RESET}
       micaflow calculate_jaccard \\
-        --input segmentation1.nii.gz \\
-        --reference ground_truth.nii.gz \\
-        --output jaccard_metrics.csv
+        {YELLOW}--input{RESET} segmentation1.nii.gz \\
+        {YELLOW}--reference{RESET} ground_truth.nii.gz \\
+        {YELLOW}--output{RESET} jaccard_metrics.csv
       
-      # With mask and custom threshold:
+      {CYAN}{BOLD}# With mask and custom threshold:{RESET}
       micaflow calculate_jaccard \\
-        --input segmentation1.nii.gz \\
-        --reference ground_truth.nii.gz \\
-        --output jaccard_metrics.csv \\
-        --mask brain_mask.nii.gz \\
-        --threshold 0.75
+        {YELLOW}--input{RESET} segmentation1.nii.gz \\
+        {YELLOW}--reference{RESET} ground_truth.nii.gz \\
+        {YELLOW}--output{RESET} jaccard_metrics.csv \\
+        {YELLOW}--mask{RESET} brain_mask.nii.gz \\
+        {YELLOW}--threshold{RESET} 0.75
     
-    NOTES:
+    {CYAN}{BOLD}────────────────────────── NOTES ─────────────────────────{RESET}
     - For multi-label segmentations, the Jaccard index is computed for each label
     - Values range from 0 (no overlap) to 1 (perfect overlap)
     - A global Jaccard index is calculated across all labels
-    
     """
     print(help_text)
-
 
 def Overlap(volume1_path, volume2_path, mask_path=None):
     """

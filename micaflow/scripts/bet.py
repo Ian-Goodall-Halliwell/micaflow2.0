@@ -20,40 +20,44 @@ import shutil
 import sys
 
 def print_help_message():
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║                           HD-BET                               ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script performs brain extraction (skull stripping) on MRI images 
     using the HD-BET deep learning tool. It accurately segments the brain 
     from surrounding tissues.
     
-    REQUIRED ARGUMENTS:
-      --input, -i      : Path to the input MR image (.nii.gz)
-      --output, -o     : Path for the output brain-extracted image (.nii.gz)
-      --output-mask, -m: Path for the output brain mask (.nii.gz)
+    {CYAN}{BOLD}────────────────────────── USAGE ──────────────────────────{RESET}
+      micaflow bet {GREEN}[options]{RESET}
     
-    OPTIONAL ARGUMENTS:
-      --cpu            : Use CPU instead of GPU for computation (slower but works without CUDA)
+    {CYAN}{BOLD}─────────────────── REQUIRED ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--input{RESET}, {YELLOW}-i{RESET}      : Path to the input MR image (.nii.gz)
+      {YELLOW}--output{RESET}, {YELLOW}-o{RESET}     : Path for the output brain-extracted image (.nii.gz)
+      {YELLOW}--output-mask{RESET}, {YELLOW}-m{RESET}: Path for the output brain mask (.nii.gz)
     
-    EXAMPLE USAGE:
-      micaflow bet \\
-        --input t1w.nii.gz \\
-        --output t1w_brain.nii.gz \\
-        --output-mask t1w_brain_mask.nii.gz
-
-      # Run on CPU instead of GPU:
-      micaflow bet \\
-        --input t1w.nii.gz \\
-        --output t1w_brain.nii.gz \\
-        --output-mask t1w_brain_mask.nii.gz \\
-        --cpu
+    {CYAN}{BOLD}─────────────────── OPTIONAL ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--cpu{RESET}            : Use CPU instead of GPU for computation (slower but works without CUDA)
     
-    NOTES:
+    {CYAN}{BOLD}────────────────── EXAMPLE USAGE ────────────────────────{RESET}
+    
+    {GREEN}# Run HD-BET with GPU{RESET}
+    micaflow bet {YELLOW}--input{RESET} t1w.nii.gz {YELLOW}--output{RESET} t1w_brain.nii.gz {YELLOW}--output-mask{RESET} t1w_brain_mask.nii.gz
+    
+    {GREEN}# Run HD-BET with CPU{RESET}
+    micaflow bet {YELLOW}--input{RESET} t1w.nii.gz {YELLOW}--output{RESET} t1w_brain.nii.gz {YELLOW}--output-mask{RESET} t1w_brain_mask.nii.gz {YELLOW}--cpu{RESET}
+    
+    {CYAN}{BOLD}────────────────────────── NOTES ─────────────────────────{RESET}
     - GPU acceleration is used by default for faster processing
     - The output is a brain-extracted image and a binary brain mask
-    - HD-BET uses a 3D U-Net architecture for robust brain extraction
     
     """
     print(help_text)

@@ -4,37 +4,45 @@ import sys
 
 
 def print_help_message():
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    """Print a help message with examples."""
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BLUE = "\033[34m"
+    MAGENTA = "\033[35m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║                        APPLY WARP                              ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script applies both an affine transformation and a warp field to
     register a moving image to a reference space.
     
-    REQUIRED ARGUMENTS:
-      --moving     : Path to the input image to be warped (.nii.gz)
-      --reference  : Path to the target/reference image (.nii.gz)
-      --affine     : Path to the affine transformation file (.mat)
-      --warp       : Path to the warp field (.nii.gz)
+    {CYAN}{BOLD}────────────────────────── REQUIRED ARGUMENTS ──────────────────────────{RESET}
+      {YELLOW}--moving{RESET}     : Path to the input image to be warped (.nii.gz)
+      {YELLOW}--reference{RESET}  : Path to the target/reference image (.nii.gz)
+      {YELLOW}--affine{RESET}     : Path to the affine transformation file (.mat)
+      {YELLOW}--warp{RESET}       : Path to the warp field (.nii.gz)
     
-    OPTIONAL ARGUMENTS:
-      --output     : Output path for the warped image (default: warped_image.nii.gz)
+    {CYAN}{BOLD}────────────────────────── OPTIONAL ARGUMENTS ──────────────────────────{RESET}
+      {YELLOW}--output{RESET}     : Output path for the warped image (default: warped_image.nii.gz)
     
-    EXAMPLE USAGE:
-      micaflow apply_warp \\
-        --moving subject_t1w.nii.gz \\
-        --reference mni152.nii.gz \\
-        --affine transform.mat \\
-        --warp warpfield.nii.gz \\
-        --output registered_t1w.nii.gz
+    {CYAN}{BOLD}────────────────────────── EXAMPLE USAGE ──────────────────────────{RESET}
     
-    NOTES:
-    - The order of transforms matters: the warp field is applied first, 
+    {BLUE}# Apply warp transformation{RESET}
+    micaflow {GREEN}apply_warp{RESET} {YELLOW}--moving{RESET} subject_t1w.nii.gz {YELLOW}--reference{RESET} mni152.nii.gz \\
+      {YELLOW}--affine{RESET} transform.mat {YELLOW}--warp{RESET} warpfield.nii.gz {YELLOW}--output{RESET} registered_t1w.nii.gz
+    
+    {CYAN}{BOLD}────────────────────────── NOTES ──────────────────────────{RESET}
+    {MAGENTA}•{RESET} The order of transforms matters: the warp field is applied first, 
       followed by the affine transformation.
-    - This is the standard order in ANTs for composite transformations.
-    
+    {MAGENTA}•{RESET} This is the standard order in ANTs for composite transformations.
     """
+    
     print(help_text)
 
 

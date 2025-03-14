@@ -6,37 +6,46 @@ from dipy.io.gradients import read_bvals_bvecs
 
 
 def print_help_message():
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    """Print a help message with formatted text."""
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║                     DWI IMAGE DENOISING                        ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script denoises diffusion-weighted images (DWI) using the Patch2Self 
     algorithm, which leverages redundant information across diffusion gradients
     to remove noise without requiring additional reference scans.
     
-    REQUIRED ARGUMENTS:
-      --input     : Path to the input DWI image (.nii.gz)
-      --bval       : Path to the b-values file (.bval)
-      --bvec       : Path to the b-vectors file (.bvec)
-      --output     : Output path for the denoised image (.nii.gz)
+    {CYAN}{BOLD}────────────────────────── USAGE ──────────────────────────{RESET}
+      micaflow denoise {GREEN}[options]{RESET}
     
-    EXAMPLE USAGE:
+    {CYAN}{BOLD}─────────────────── REQUIRED ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--input{RESET}     : Path to the input DWI image (.nii.gz)
+      {YELLOW}--bval{RESET}      : Path to the b-values file (.bval)
+      {YELLOW}--bvec{RESET}      : Path to the b-vectors file (.bvec)
+      {YELLOW}--output{RESET}    : Output path for the denoised image (.nii.gz)
+    
+    {CYAN}{BOLD}─────────────────── EXAMPLE USAGE ───────────────────{RESET}
       micaflow denoise \\
-        --moving raw_dwi.nii.gz \\
-        --bval dwi.bval \\
-        --bvec dwi.bvec \\
-        --output denoised_dwi.nii.gz
+        {YELLOW}--input{RESET} raw_dwi.nii.gz \\
+        {YELLOW}--bval{RESET} dwi.bval \\
+        {YELLOW}--bvec{RESET} dwi.bvec \\
+        {YELLOW}--output{RESET} denoised_dwi.nii.gz
     
-    NOTES:
+    {CYAN}{BOLD}────────────────────────── NOTES ─────────────────────────{RESET}
     - Patch2Self is a self-supervised learning method for denoising
     - Processing preserves anatomical structure while removing noise
     - The implementation uses OLS regression with b0 threshold of 50 s/mm²
     - B0 volumes are not denoised separately in this implementation
-    
     """
     print(help_text)
-
 
 def run_denoise(moving, moving_bval, moving_bvec, output):
     """Denoise diffusion-weighted images using the Patch2Self algorithm.

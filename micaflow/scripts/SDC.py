@@ -12,30 +12,41 @@ import shutil
 import sys
 
 def print_help_message():
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    """Print a help message with formatted text."""
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║               SUSCEPTIBILITY DISTORTION CORRECTION             ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script corrects geometric distortions in echo-planar imaging (EPI) 
     MR images caused by magnetic field inhomogeneities. It uses the HYSCO 
     algorithm with a pair of images acquired with opposite phase-encoding 
     directions.
     
-    REQUIRED ARGUMENTS:
-      --input         : Path to the main EPI image (.nii.gz)
-      --reverse-image : Path to the reverse phase-encoded image (.nii.gz)
-      --output        : Output path for the corrected image (.nii.gz)
-      --output-warp   : Output path for the estimated warp field (.nii.gz)
+    {CYAN}{BOLD}────────────────────────── USAGE ──────────────────────────{RESET}
+      micaflow SDC {GREEN}[options]{RESET}
     
-    EXAMPLE USAGE:
-      python -m micaflow.scripts.SDC \\
-        --input dwi.nii.gz \\
-        --reverse-image dwi_reverse.nii.gz \\
-        --output corrected_dwi.nii.gz \\
-        --output-warp fieldmap.nii.gz
+    {CYAN}{BOLD}─────────────────── REQUIRED ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--input{RESET}         : Path to the main EPI image (.nii.gz)
+      {YELLOW}--reverse-image{RESET} : Path to the reverse phase-encoded image (.nii.gz)
+      {YELLOW}--output{RESET}        : Output path for the corrected image (.nii.gz)
+      {YELLOW}--output-warp{RESET}   : Output path for the estimated warp field (.nii.gz)
     
-    NOTES:
+    {CYAN}{BOLD}──────────────────────── EXAMPLE USAGE ───────────────────────{RESET}
+      micaflow SDC \\
+        {YELLOW}--input{RESET} main_epi.nii.gz \\
+        {YELLOW}--reverse-image{RESET} reverse_epi.nii.gz \\
+        {YELLOW}--output{RESET} corrected_epi.nii.gz \\
+        {YELLOW}--output-warp{RESET} warp_field.nii.gz
+    
+    {CYAN}{BOLD}────────────────────────── NOTES ─────────────────────────{RESET}
     - The algorithm extracts the first volume from 4D input images
     - GPU acceleration is used if available (recommended)
     - The correction estimates a displacement field along the y-axis

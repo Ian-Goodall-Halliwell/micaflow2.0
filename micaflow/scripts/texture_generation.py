@@ -8,29 +8,39 @@ import numpy as np
 import time
 import sys
 
-
 def print_help_message():
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    """Print a help message with formatted text."""
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║                    TEXTURE FEATURE EXTRACTION                  ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script generates texture feature maps from neuroimaging data using
     various computational approaches. The features include gradient magnitude,
     relative intensity, and tissue segmentation.
     
-    REQUIRED ARGUMENTS:
-      --input, -i   : Path to the input image file (.nii.gz)
-      --mask, -m    : Path to the binary mask file (.nii.gz)
-      --output, -o  : Output directory for texture feature maps
+    {CYAN}{BOLD}────────────────────────── USAGE ──────────────────────────{RESET}
+      micaflow texture_generation {GREEN}[options]{RESET}
     
-    EXAMPLE USAGE:
-      python -m micaflow.scripts.texture_generation \\
-        --input t1w_preprocessed.nii.gz \\
-        --mask brain_mask.nii.gz \\
-        --output /path/to/output_dir
+    {CYAN}{BOLD}─────────────────── REQUIRED ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--input{RESET}, {YELLOW}-i{RESET}   : Path to the input image file (.nii.gz)
+      {YELLOW}--mask{RESET}, {YELLOW}-m{RESET}    : Path to the binary mask file (.nii.gz)
+      {YELLOW}--output{RESET}, {YELLOW}-o{RESET}  : Output directory for texture feature maps
     
-    NOTES:
+    {CYAN}{BOLD}──────────────────────── EXAMPLE USAGE ───────────────────────{RESET}
+      micaflow texture_generation \\
+        {YELLOW}--input{RESET} t1w_preprocessed.nii.gz \\
+        {YELLOW}--mask{RESET} brain_mask.nii.gz \\
+        {YELLOW}--output{RESET} /path/to/output_dir
+    
+    {CYAN}{BOLD}────────────────────────── NOTES ─────────────────────────{RESET}
     - The script automatically segments the input into tissue types
     - Computed features include gradient magnitude and relative intensity
     - All features are saved as separate NIfTI files in the output directory

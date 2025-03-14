@@ -2,11 +2,12 @@ import os
 from pathlib import Path
 from micaflow.scripts.util_bids_pathing import check_paths
 
+
 # Default parameters
 SUBJECT = config.get("subject", "")
 SESSION = config.get("session", "")
-OUT_DIR = config.get("out_dir", "")
-THREADS = config.get("threads", "")
+OUT_DIR = config.get("output", "")
+THREADS = workflow.cores
 DATA_DIRECTORY = config.get("data_directory", "")
 FLAIR_FILE = config.get("flair_file", "")
 T1W_FILE = config.get("t1w_file", "")
@@ -16,6 +17,7 @@ BVEC_FILE = config.get("bvec_file", "")
 INVERSE_DWI_FILE = config.get("inverse_dwi_file", "")
 CPU = config.get("cpu", "")
 CPU = "--cpu" if CPU else ""
+print("CPU: ", CPU)
 
 # Atlas paths
 ATLAS_DIR = os.path.join(workflow.basedir, "atlas")

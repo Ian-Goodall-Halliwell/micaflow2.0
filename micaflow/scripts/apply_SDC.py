@@ -4,35 +4,48 @@ import numpy as np
 import sys
 from scipy.ndimage import map_coordinates
 
-
 def print_help_message():
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    """Print an extended help message with examples."""
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BLUE = "\033[34m"
+    MAGENTA = "\033[35m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║          APPLY SUSCEPTIBILITY DISTORTION CORRECTION            ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script applies susceptibility distortion correction to diffusion images
     using a pre-calculated warp field. It takes a motion-corrected diffusion image
     and applies the warp field to each 3D volume along the y-axis.
     
-    REQUIRED ARGUMENTS:
-      --input       : Path to the motion-corrected DWI image (.nii.gz)
-      --warp        : Path to the warp field estimated from SDC (.nii.gz)
-      --affine      : Path to an image from which to extract the affine matrix
-      --output      : Output path for the corrected image
+    {CYAN}{BOLD}────────────────────────── USAGE ──────────────────────────{RESET}
+      micaflow apply_SDC {GREEN}[options]{RESET}
     
-    EXAMPLE USAGE:
-      python -m micaflow.scripts.apply_SDC \\
-        --input subj_motion_corrected.nii.gz \\
-        --warp SDC.nii.gz \\
-        --affine original_dwi.nii.gz \\
-        --output corrected_dwi.nii.gz
+    {CYAN}{BOLD}────────────────── REQUIRED ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--input{RESET}       : Path to the motion-corrected DWI image (.nii.gz)
+      {YELLOW}--warp{RESET}        : Path to the warp field estimated from SDC (.nii.gz)
+      {YELLOW}--affine{RESET}      : Path to an image from which to extract the affine matrix
+      {YELLOW}--output{RESET}      : Output path for the corrected image
     
-    NOTES:
-      - The warp field should contain displacement values along the y-axis
-      - This implementation assumes that susceptibility distortions are primarily 
-        in the phase-encoding direction (typically y-axis)
+    {CYAN}{BOLD}─────────────────── EXAMPLE USAGE ───────────────────────{RESET}
     
+    {BLUE}# Apply SDC to a motion-corrected DWI image{RESET}
+    micaflow apply_SDC \\
+      {YELLOW}--input{RESET} subj_motion_corrected.nii.gz \\
+      {YELLOW}--warp{RESET} SDC.nii.gz \\
+      {YELLOW}--affine{RESET} original_dwi.nii.gz \\
+      {YELLOW}--output{RESET} corrected_dwi.nii.gz
+    
+    {CYAN}{BOLD}────────────────────────── NOTES ───────────────────────{RESET}
+    {MAGENTA}•{RESET} The warp field should contain displacement values along the y-axis
+    {MAGENTA}•{RESET} This implementation assumes that susceptibility distortions are primarily 
+      in the phase-encoding direction (typically y-axis)
     """
     print(help_text)
 

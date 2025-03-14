@@ -7,6 +7,5 @@ dwi_file: "/home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_acq-b700-
 bval_file: "/home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_acq-b700-41_dir-AP_dwi.bval"  # Path to bval file
 bvec_file: "/home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_acq-b700-41_dir-AP_dwi.bvec"  # Path to bvec file
 inverse_dwi_file: "/home/ian/GitHub/data/sub-HC131/ses-01/dwi/sub-HC131_ses-01_dir-PA_dwi.nii.gz"  # Path to inverse DWI image
-out_dir: "outputs"  # Output directory where results will be stored
-threads: 4         # Number of CPU threads to use
+output: "outputs"  # Output directory where results will be stored
 cpu: true

@@ -21,42 +21,52 @@ import argparse
 import sys
 
 def print_help_message():
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    """Print an extended help message with examples."""
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BLUE = "\033[34m"
+    MAGENTA = "\033[35m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║                    N4 BIAS FIELD CORRECTION                    ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script corrects intensity non-uniformity (bias field) in MR images 
     using the N4 algorithm from ANTs. It supports both 3D anatomical images 
     and 4D diffusion-weighted images.
     
-    REQUIRED ARGUMENTS:
-      --input, -i    : Path to the input image (.nii.gz)
-      --output, -o   : Path for the output bias-corrected image (.nii.gz)
+    {CYAN}{BOLD}──────────────────── REQUIRED ARGUMENTS ────────────────────{RESET}
+      {YELLOW}--input{RESET}, {YELLOW}-i{RESET}    : Path to the input image (.nii.gz)
+      {YELLOW}--output{RESET}, {YELLOW}-o{RESET}   : Path for the output bias-corrected image (.nii.gz)
     
-    OPTIONAL ARGUMENTS:
-      --mask, -m     : Path to a brain mask image (required for 4D images)
-      --mode         : Processing mode: 3d, 4d, or auto (default: auto)
+    {CYAN}{BOLD}──────────────────── OPTIONAL ARGUMENTS ────────────────────{RESET}
+      {YELLOW}--mask{RESET}, {YELLOW}-m{RESET}     : Path to a brain mask image (required for 4D images)
+      {YELLOW}--mode{RESET}         : Processing mode: 3d, 4d, or auto (default: auto)
     
-    EXAMPLE USAGE:
-      # For anatomical (3D) images:
-      micaflow bias_correction \\
-        --input t1w.nii.gz \\
-        --output corrected_t1w.nii.gz
-      
-      # For diffusion (4D) images with mask:
-      micaflow bias_correction \\
-        --input dwi.nii.gz \\
-        --output corrected_dwi.nii.gz \\
-        --mask brain_mask.nii.gz \\
-        --mode 4d
+    {CYAN}{BOLD}──────────────────── EXAMPLE USAGE ────────────────────{RESET}
     
-    NOTES:
-      - In 'auto' mode, the script detects whether the input is 3D or 4D
-      - For 3D images, a mask is optional (one will be generated if not provided)
-      - For 4D images, a mask is required
-      - 4D processing applies the correction to each volume separately
+    {BLUE}# For anatomical (3D) images:{RESET}
+    micaflow bias_correction \\
+      {YELLOW}--input{RESET} t1w.nii.gz \\
+      {YELLOW}--output{RESET} corrected_t1w.nii.gz
     
+    {BLUE}# For diffusion (4D) images with mask:{RESET}
+    micaflow bias_correction \\
+      {YELLOW}--input{RESET} dwi.nii.gz \\
+      {YELLOW}--output{RESET} corrected_dwi.nii.gz \\
+      {YELLOW}--mask{RESET} brain_mask.nii.gz \\
+      {YELLOW}--mode{RESET} 4d
+    
+    {CYAN}{BOLD}────────────────────────── NOTES ───────────────────────{RESET}
+    {MAGENTA}•{RESET} In 'auto' mode, the script detects whether the input is 3D or 4D
+    {MAGENTA}•{RESET} For 3D images, a mask is optional (one will be generated if not provided)
+    {MAGENTA}•{RESET} For 4D images, a mask is required
+    {MAGENTA}•{RESET} 4D processing applies the correction to each volume separately
     """
     print(help_text)
     

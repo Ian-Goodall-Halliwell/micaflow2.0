@@ -45,12 +45,13 @@ MicaFlow can be used as a complete pipeline or as individual modules:
 # Basic usage with T1w only
 micaflow pipeline --subject sub-001 --session ses-01 \
   --data-directory /path/to/data --t1w-file sub-001_ses-01_T1w.nii.gz \
-  --out-dir /output/path --cores 4
+  --out-dir /output/path --cores 4 --cpu
 
 # With FLAIR image
 micaflow pipeline --subject sub-001 --session ses-01 \
   --data-directory /path/to/data --t1w-file sub-001_ses-01_T1w.nii.gz \
-  --flair-file sub-001_ses-01_FLAIR.nii.gz --out-dir /output/path --cores 4
+  --flair-file sub-001_ses-01_FLAIR.nii.gz --out-dir /output/path \
+  --cores 4 --cpu
 
 # With diffusion data
 micaflow pipeline --subject sub-001 --session ses-01 \
@@ -58,7 +59,7 @@ micaflow pipeline --subject sub-001 --session ses-01 \
   --run-dwi --dwi-file sub-001_ses-01_dwi.nii.gz \
   --bval-file sub-001_ses-01_dwi.bval --bvec-file sub-001_ses-01_dwi.bvec \
   --inverse-dwi-file sub-001_ses-01_acq-PA_dwi.nii.gz \
-  --out-dir /output/path --cores 4
+  --out-dir /output/path --cores 4 --cpu
 ```
 
 ### Using Individual Modules

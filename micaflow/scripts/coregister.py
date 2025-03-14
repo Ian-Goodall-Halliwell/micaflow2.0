@@ -5,40 +5,50 @@ import sys
 
 
 def print_help_message():
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    """Print a help message with examples."""
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BLUE = "\033[34m"
+    MAGENTA = "\033[35m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║                      IMAGE COREGISTRATION                      ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script performs linear (rigid + affine) and nonlinear (SyN) registration 
     between two images using ANTs. The registration aligns the moving image to 
     match the fixed reference image space.
     
-    REQUIRED ARGUMENTS:
-      --fixed-file   : Path to the fixed/reference image (.nii.gz)
-      --moving-file  : Path to the moving image to be registered (.nii.gz)
-      --output       : Output path for the registered image (.nii.gz)
+    {CYAN}{BOLD}────────────────────────── USAGE ──────────────────────────{RESET}
+      micaflow coregister {GREEN}[options]{RESET}
     
-    OPTIONAL ARGUMENTS:
-      --warp-file      : Path to save the forward warp field (.nii.gz)
-      --affine-file    : Path to save the forward affine transform (.mat)
-      --rev-warp-file  : Path to save the reverse warp field (.nii.gz)
-      --rev-affine-file: Path to save the reverse affine transform (.mat)
+    {CYAN}{BOLD}─────────────────── REQUIRED ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--fixed-file{RESET}   : Path to the fixed/reference image (.nii.gz)
+      {YELLOW}--moving-file{RESET}  : Path to the moving image to be registered (.nii.gz)
+      {YELLOW}--output{RESET}       : Output path for the registered image (.nii.gz)
     
-    EXAMPLE USAGE:
-      micaflow coregister \\
-        --fixed-file mni152.nii.gz \\
-        --moving-file subject_t1w.nii.gz \\
-        --output registered_t1w.nii.gz \\
-        --warp-file warp.nii.gz \\
-        --affine-file affine.mat
+    {CYAN}{BOLD}─────────────────── OPTIONAL ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--warp-file{RESET}      : Path to save the forward warp field (.nii.gz)
+      {YELLOW}--affine-file{RESET}    : Path to save the forward affine transform (.mat)
+      {YELLOW}--rev-warp-file{RESET}  : Path to save the reverse warp field (.nii.gz)
+      {YELLOW}--rev-affine-file{RESET}: Path to save the reverse affine transform (.mat)
     
-    NOTES:
-    - The registration performs SyNRA transformation (rigid+affine+SyN)
-    - Forward transforms convert from moving space to fixed space
-    - Reverse transforms convert from fixed space to moving space
-    - The transforms can be applied to other images using apply_warp
+    {CYAN}{BOLD}────────────────── EXAMPLE USAGE ────────────────────────{RESET}
     
+    {BLUE}# Register a moving image to a fixed image{RESET}
+    micaflow coregister {YELLOW}--fixed-file{RESET} mni152.nii.gz {YELLOW}--moving-file{RESET} subject_t1w.nii.gz \\
+      {YELLOW}--output{RESET} registered_t1w.nii.gz {YELLOW}--warp-file{RESET} warp.nii.gz {YELLOW}--affine-file{RESET} affine.mat
+    
+    {CYAN}{BOLD}────────────────────────── NOTES ───────────────────────{RESET}
+    {MAGENTA}•{RESET} The registration performs SyNRA transformation (rigid+affine+SyN)
+    {MAGENTA}•{RESET} Forward transforms convert from moving space to fixed space
+    {MAGENTA}•{RESET} Reverse transforms convert from fixed space to moving space
+    {MAGENTA}•{RESET} The transforms can be applied to other images using apply_warp
     """
     print(help_text)
 

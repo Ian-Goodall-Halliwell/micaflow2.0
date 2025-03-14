@@ -50,23 +50,21 @@ def print_extended_help():
     
     {CYAN}{BOLD}──────────────── PIPELINE REQUIRED PARAMETERS ────────────{RESET}
       {YELLOW}--subject{RESET} SUBJECT_ID           Subject ID
-      {YELLOW}--out-dir{RESET} OUTPUT_DIR           Output directory
-      {YELLOW}--data-directory{RESET} DATA_DIR      Input data directory 
+      {YELLOW}--out-dir{RESET} OUTPUT_DIR           Output directory 
       {YELLOW}--t1w-file{RESET} T1W_FILE            T1-weighted image file
     
     {CYAN}{BOLD}──────────────── PIPELINE OPTIONAL PARAMETERS ────────────{RESET}
+      {YELLOW}--data-directory{RESET} DATA_DIR      Input data directory
       {YELLOW}--session{RESET} SESSION_ID           Session ID (default: none)
       {YELLOW}--flair-file{RESET} FLAIR_FILE        FLAIR image file
-      {YELLOW}--run-dwi{RESET}                      Enable diffusion processing
       {YELLOW}--dwi-file{RESET} DWI_FILE            Diffusion weighted image
       {YELLOW}--bval-file{RESET} BVAL_FILE          B-value file for DWI
       {YELLOW}--bvec-file{RESET} BVEC_FILE          B-vector file for DWI
       {YELLOW}--inverse-dwi-file{RESET} INV_FILE    Inverse (PA) DWI for distortion correction
-      {YELLOW}--threads{RESET} N                    Number of threads (default: 1)
       {YELLOW}--cpu{RESET}                          Force CPU computation
       {YELLOW}--cores{RESET} N                      Number of CPU cores to use (default: 1)
       {YELLOW}--dry-run{RESET}, {YELLOW}-n{RESET}                  Dry run (don't execute commands)
-      {YELLOW}--config-file{RESET} FILE             Path to a YAML configuration file, where you can specify parameters
+      {YELLOW}--config-file{RESET} FILE             Path to a YAML configuration file.
     
     {CYAN}{BOLD}────────────────── EXAMPLE PIPELINE USAGE ───────────────{RESET}
 
@@ -351,7 +349,7 @@ def main():
         
         # Add config parameters if provided
         config = {}
-        for param in ["subject", "session", "out_dir", "data_directory", "flair_file", 
+        for param in ["subject", "session", "output", "data_directory", "flair_file", 
                      "t1w_file", "dwi_file", "bval_file", "bvec_file", "inverse_dwi_file", 
                      "threads"]:
             if getattr(args, param.replace("-", "_"), None):
@@ -361,8 +359,10 @@ def main():
             config["cpu"] = "True"
         
         # Add config parameters to command
+        if len(config) > 0:
+            cmd.append("--config")
         for key, value in config.items():
-            cmd.extend(["--config", f"{key}={value}"])
+            cmd.extend([f"{key}={value}"])
         
         # Add config file if provided
         if args.config_file:

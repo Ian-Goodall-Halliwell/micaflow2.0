@@ -10,9 +10,11 @@ YELLOW = '\033[93m'
 RED = '\033[91m'
 RESET = '\033[0m'
 
-def print_note(message):
+def print_note(message, message2=None):
     """Print a note message in green."""
     print(f"{GREEN}[NOTE]{RESET} {message}")
+    if message2:
+        print(f"{GREEN}[NOTE]{RESET} {message2}")
 
 def print_warning(message):
     """Print a warning message in yellow."""

@@ -22,57 +22,69 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 def print_extended_help():
     """Print extended help message with examples and usage instructions."""
-    help_text = """
-    ╔════════════════════════════════════════════════════════════════╗
+    # ANSI color codes
+    CYAN = "\033[36m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BLUE = "\033[34m"
+    MAGENTA = "\033[35m"
+    BOLD = "\033[1m"
+    RESET = "\033[0m"
+    
+    help_text = f"""
+    {CYAN}{BOLD}╔════════════════════════════════════════════════════════════════╗
     ║                         SYNTHSEG                               ║
-    ╚════════════════════════════════════════════════════════════════╝
+    ╚════════════════════════════════════════════════════════════════╝{RESET}
     
     This script runs the SynthSeg neural network-based tool for brain MRI
     segmentation. It provides automated segmentation of anatomical structures
     even across different contrasts and acquisition types.
     
-    REQUIRED ARGUMENTS:
-      --i PATH       : Input image(s) to segment (file or folder)
-      --o PATH       : Output segmentation file(s) or folder
+    {CYAN}{BOLD}────────────────────────── USAGE ──────────────────────────{RESET}
+      micaflow synthseg {GREEN}[options]{RESET}
     
-    OPTIONAL ARGUMENTS:
-      --parc         : Enable cortical parcellation
-      --robust       : Use robust mode (slower but better quality)
-      --fast         : Faster processing (less postprocessing)
-      --threads N    : Set number of CPU threads (default: 1)
-      --cpu          : Force CPU processing (instead of GPU)
-      --vol PATH     : Output volumetric CSV file
-      --qc PATH      : Output quality control scores CSV file
-      --post PATH    : Output posterior probability maps
-      --resample PATH: Output resampled images
-      --crop N [N ...]: Size of 3D patches to analyze (default: 192)
-      --ct           : Clip intensities for CT scans [0,80]
-      --v1           : Use SynthSeg 1.0 instead of 2.0
+    {CYAN}{BOLD}─────────────────── REQUIRED ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--i{RESET} PATH       : Input image(s) to segment (file or folder)
+      {YELLOW}--o{RESET} PATH       : Output segmentation file(s) or folder
     
-    EXAMPLE USAGE:
-      # Basic segmentation
-      python -m micaflow.scripts.synthseg \\
-        --i t1w_scan.nii.gz \\
-        --o segmentation.nii.gz
-      
-      # With cortical parcellation
-      python -m micaflow.scripts.synthseg \\
-        --i t1w_scan.nii.gz \\
-        --o segmentation.nii.gz \\
-        --parc
-      
-      # Batch processing with volume calculation
-      python -m micaflow.scripts.synthseg \\
-        --i input_folder/ \\
-        --o output_folder/ \\
-        --vol volumes.csv
+    {CYAN}{BOLD}─────────────────── OPTIONAL ARGUMENTS ───────────────────{RESET}
+      {YELLOW}--parc{RESET}         : Enable cortical parcellation
+      {YELLOW}--robust{RESET}       : Use robust mode (slower but better quality)
+      {YELLOW}--fast{RESET}         : Faster processing (less postprocessing)
+      {YELLOW}--threads{RESET} N    : Set number of CPU threads (default: 1)
+      {YELLOW}--cpu{RESET}          : Force CPU processing (instead of GPU)
+      {YELLOW}--vol{RESET} PATH     : Output volumetric CSV file
+      {YELLOW}--qc{RESET} PATH      : Output quality control scores CSV file
+      {YELLOW}--post{RESET} PATH    : Output posterior probability maps
+      {YELLOW}--resample{RESET} PATH: Output resampled images
+      {YELLOW}--crop{RESET} N [N ...]: Size of 3D patches to analyze (default: 192)
+      {YELLOW}--ct{RESET}           : Clip intensities for CT scans [0,80]
+      {YELLOW}--v1{RESET}           : Use SynthSeg 1.0 instead of 2.0
     
-    NOTES:
-    - SynthSeg works with any MRI contrast without retraining
-    - GPU acceleration is used by default for faster processing
-    - The robust mode provides better quality but is slower
-    - For batch processing, input and output paths must be folders
+    {CYAN}{BOLD}────────────────── EXAMPLE USAGE ────────────────────────{RESET}
     
+    {BLUE}# Basic segmentation{RESET}
+    micaflow synthseg \\
+      {YELLOW}--i{RESET} t1w_scan.nii.gz \\
+      {YELLOW}--o{RESET} segmentation.nii.gz
+    
+    {BLUE}# With cortical parcellation{RESET}
+    micaflow synthseg \\
+      {YELLOW}--i{RESET} t1w_scan.nii.gz \\
+      {YELLOW}--o{RESET} segmentation.nii.gz \\
+      {YELLOW}--parc{RESET}
+    
+    {BLUE}# Batch processing with volume calculation{RESET}
+    micaflow synthseg \\
+      {YELLOW}--i{RESET} input_folder/ \\
+      {YELLOW}--o{RESET} output_folder/ \\
+      {YELLOW}--vol{RESET} volumes.csv
+    
+    {CYAN}{BOLD}────────────────────────── NOTES ───────────────────────{RESET}
+    {MAGENTA}•{RESET} SynthSeg works with any MRI contrast without retraining
+    {MAGENTA}•{RESET} GPU acceleration is used by default for faster processing
+    {MAGENTA}•{RESET} The robust mode provides better quality but is slower
+    {MAGENTA}•{RESET} For batch processing, input and output paths must be folders
     """
     print(help_text)
     
