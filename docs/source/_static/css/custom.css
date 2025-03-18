@@ -69,3 +69,25 @@ pre {
     max-height: 150px;
     margin: 0.5rem auto;
 }
+
+/* Improve tab styling */
+.wy-menu-vertical li.toctree-l1 {
+    font-size: 100%;
+    font-weight: bold;
+}
+
+.wy-menu-vertical li.toctree-l2 {
+    font-size: 95%;
+}
+
+.wy-menu-vertical li.toctree-l3 {
+    font-size: 90%;
+}
+
+/* Style for the top-level tabs */
+.wy-menu-vertical p.caption {
+    color: #55a5d9;
+    font-size: 110%;
+    margin: 12px 0 4px;
+    padding: 0 1.618em;
+}

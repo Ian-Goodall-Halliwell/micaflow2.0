@@ -25,6 +25,15 @@ if errorlevel 9009 (
 
 if "%1" == "" goto help
 
+if "%1" == "html" (
+    python generate_script_docs.py
+    %SPHINXBUILD% -b html %ALLSPHINXOPTS% %BUILDDIR%/html
+    if errorlevel 1 exit /b 1
+    echo.
+    echo.Build finished. The HTML pages are in %BUILDDIR%/html.
+    goto end
+)
+
 %SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
 goto end
 

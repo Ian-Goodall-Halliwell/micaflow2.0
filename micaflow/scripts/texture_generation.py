@@ -225,4 +225,5 @@ if __name__ == "__main__":
                       help="Output directory for texture feature maps")
     
     args = parser.parse_args()
+    
     run_texture_pipeline(args.input, args.mask, args.output)

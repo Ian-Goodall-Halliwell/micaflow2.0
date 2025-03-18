@@ -15,9 +15,10 @@ author = 'MICA Lab'
 # Theme options
 html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
-    'logo_only': True,
-    'display_version': True,
-    'style_nav_header_background': '#343131',
+    'navigation_depth': 2,  # This controls dropdown depth
+    'collapse_navigation': False,
+    'sticky_navigation': True, 
+    'titles_only': False,
 }
 
 # Logo setup
@@ -35,9 +36,12 @@ sys.path.insert(0, os.path.abspath('../..'))  # Root directory
 sys.path.insert(0, os.path.abspath('../../scripts'))  # Scripts directory
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary', 
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
-    'sphinx.ext.autosummary',
+    'sphinx_rtd_theme',
+    'sphinx_copybutton',
+    'sphinx_tabs.tabs',
 ]
 autosummary_generate = True  # Generate stub pages for all modules
 # For NumPy/Google style docstrings

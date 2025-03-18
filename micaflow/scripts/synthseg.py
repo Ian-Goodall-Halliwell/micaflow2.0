@@ -92,8 +92,6 @@ def print_extended_help():
     print(help_text)
     
 def main(args):
-  
-  # add main folder to python path and import ./SynthSeg/predict_synthseg.py
   synthseg_home = os.path.dirname(os.path.abspath(__file__))
   sys.path.append(synthseg_home)
   model_dir = os.path.join(synthseg_home, 'models')

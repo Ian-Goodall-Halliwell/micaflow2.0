@@ -14,6 +14,7 @@ YELLOW = Fore.YELLOW
 BLUE = Fore.BLUE
 MAGENTA = Fore.MAGENTA
 BOLD = Style.BRIGHT
+RED = Fore.RED
 RESET = Style.RESET_ALL
 
 def print_note(message, message2=None):
@@ -45,9 +46,18 @@ def check_paths(DATA_DIRECTORY, OUT_DIR, SUBJECT, SESSION, CPU, FLAIR_FILE, T1W_
     if CPU == '':
         print_note("CPU not provided, defaulting to running on CPU. To enable GPU computation, set this to False.")
         CPU = True
-    if THREADS == '':
+    elif CPU == 'False':
+        print_note("GPU computation enabled.")
+        CPU = False
+    if THREADS is None:
         print_note("THREADS not provided, defaulting to single-threading.")
         THREADS = 1
+    elif THREADS == '':
+        print_note("THREADS not provided, defaulting to single-threading.")
+        THREADS = 1
+    else:
+        print_note(f"THREADS set to {THREADS}.")
+        THREADS = int(THREADS)
     if DWI_FILE != '':
         print_note("DWI file provided. Enabling diffusion pipeline...")
         if BVAL_FILE == '':
@@ -77,10 +87,10 @@ def check_paths(DATA_DIRECTORY, OUT_DIR, SUBJECT, SESSION, CPU, FLAIR_FILE, T1W_
                 if os.path.exists(DATA_DIRECTORY + '/' + SUBJECT):
                     print_note(f"Subject {SUBJECT} exists.")
                     if SESSION != '':
-                        if os.path.exists(DATA_DIRECTORY + '/' + SUBJECT + '/' + SESSION):
-                            print_note(f"Session {SESSION} exists.")
-                        elif SESSION == None:
+                        if SESSION == None:
                             print_note("Session is set to None.")
+                        elif os.path.exists(DATA_DIRECTORY + '/' + SUBJECT + '/' + SESSION):
+                            print_note(f"Session {SESSION} exists.")
                         else:
                             print_error(f"Session {SESSION} does not exist.")
                             sys.exit(1)
