@@ -1,0 +1,19 @@
+Calculate Jaccard
+=================
+
+Command Line Usage
+-----------------
+
+.. code-block:: bash
+
+    micaflow calculate_jaccard [options]
+
+Source Code
+-----------
+
+View the source code: `GitHub Repository <https://github.com/MICA-LAB/micaflow2.0/blob/main/micaflow/scripts/calculate_jaccard.py>`_
+
+
+
+.. automodule:: micaflow.scripts.calculate_jaccard
+   :noindex:

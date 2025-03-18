@@ -1,0 +1,19 @@
+Bias Correction
+===============
+
+Command Line Usage
+-----------------
+
+.. code-block:: bash
+
+    micaflow bias_correction [options]
+
+Source Code
+-----------
+
+View the source code: `GitHub Repository <https://github.com/MICA-LAB/micaflow2.0/blob/main/micaflow/scripts/bias_correction.py>`_
+
+
+
+.. automodule:: micaflow.scripts.bias_correction
+   :noindex:

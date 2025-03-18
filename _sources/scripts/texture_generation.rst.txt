@@ -1,0 +1,19 @@
+Texture Generation
+==================
+
+Command Line Usage
+-----------------
+
+.. code-block:: bash
+
+    micaflow texture_generation [options]
+
+Source Code
+-----------
+
+View the source code: `GitHub Repository <https://github.com/MICA-LAB/micaflow2.0/blob/main/micaflow/scripts/texture_generation.py>`_
+
+
+
+.. automodule:: micaflow.scripts.texture_generation
+   :noindex:

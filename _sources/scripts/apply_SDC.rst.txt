@@ -1,0 +1,19 @@
+Apply Sdc
+=========
+
+Command Line Usage
+-----------------
+
+.. code-block:: bash
+
+    micaflow apply_SDC [options]
+
+Source Code
+-----------
+
+View the source code: `GitHub Repository <https://github.com/MICA-LAB/micaflow2.0/blob/main/micaflow/scripts/apply_SDC.py>`_
+
+
+
+.. automodule:: micaflow.scripts.apply_SDC
+   :noindex:

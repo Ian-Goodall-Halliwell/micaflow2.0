@@ -1,0 +1,19 @@
+Coregister
+==========
+
+Command Line Usage
+-----------------
+
+.. code-block:: bash
+
+    micaflow coregister [options]
+
+Source Code
+-----------
+
+View the source code: `GitHub Repository <https://github.com/MICA-LAB/micaflow2.0/blob/main/micaflow/scripts/coregister.py>`_
+
+
+
+.. automodule:: micaflow.scripts.coregister
+   :noindex:

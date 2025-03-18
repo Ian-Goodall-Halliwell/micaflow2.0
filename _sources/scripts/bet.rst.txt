@@ -1,0 +1,19 @@
+Bet
+===
+
+Command Line Usage
+-----------------
+
+.. code-block:: bash
+
+    micaflow bet [options]
+
+Source Code
+-----------
+
+View the source code: `GitHub Repository <https://github.com/MICA-LAB/micaflow2.0/blob/main/micaflow/scripts/bet.py>`_
+
+
+
+.. automodule:: micaflow.scripts.bet
+   :noindex:

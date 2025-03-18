@@ -1,0 +1,19 @@
+Compute Fa Md
+=============
+
+Command Line Usage
+-----------------
+
+.. code-block:: bash
+
+    micaflow compute_fa_md [options]
+
+Source Code
+-----------
+
+View the source code: `GitHub Repository <https://github.com/MICA-LAB/micaflow2.0/blob/main/micaflow/scripts/compute_fa_md.py>`_
+
+
+
+.. automodule:: micaflow.scripts.compute_fa_md
+   :noindex:

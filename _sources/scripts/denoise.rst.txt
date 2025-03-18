@@ -1,0 +1,19 @@
+Denoise
+=======
+
+Command Line Usage
+-----------------
+
+.. code-block:: bash
+
+    micaflow denoise [options]
+
+Source Code
+-----------
+
+View the source code: `GitHub Repository <https://github.com/MICA-LAB/micaflow2.0/blob/main/micaflow/scripts/denoise.py>`_
+
+
+
+.. automodule:: micaflow.scripts.denoise
+   :noindex:
